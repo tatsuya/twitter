@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  p Fill in the form below to sign up!
+
+  form(action="/register" method="post")
+    p
+      input(type="text" name="user[name]" placeholder="Username")
+    p
+      input(type="text" name="user[pass]" placeholder="Password")
+    p
+      input(type="submit" value="Sign Up")
