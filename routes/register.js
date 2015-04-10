@@ -4,11 +4,11 @@ var router = express.Router();
 var User = require('../lib/user');
 
 router.get('/', function(req, res) {
+  req.flash();
   res.render('register', { title: 'Register' });
 });
 
 router.post('/', function(req, res, next) {
-  console.log(req.body);
   var data = req.body.user;
   User.getByName(data.name, function(err, user) {
     if (err) {
@@ -16,6 +16,7 @@ router.post('/', function(req, res, next) {
     }
 
     if (user.id) {
+      req.flash('error', 'Username already taken!');
       // A back redirection redirects the request back to the referer,
       // defaulting to / when the referer is missing.
       return res.redirect('back');

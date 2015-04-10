@@ -7,7 +7,7 @@ Learning materials for Node.js in Action, Chapter 9 - Advanced Express.
 Authenticating users
 
 - [x] Saving and loading users
-- [ ] Registering new users
+- [x] Registering new users
 - [ ] Logging in registered users
 - [ ] User-loading middleware
 

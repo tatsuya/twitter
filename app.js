@@ -6,6 +6,8 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var flash = require('./lib/flash');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var register = require('./routes/register');
@@ -24,6 +26,7 @@ app.use(session({
     saveUninitialized: true,
     secret: 'topsecret'
 }));
+app.use(flash());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
