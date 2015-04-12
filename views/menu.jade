@@ -1,0 +1,8 @@
+#menu
+  if user
+    span.name= user.name
+    a(href="/post") post
+    a(href="/logout") logout
+  else
+    a(href="/login") login
+    a(href="/register") register

@@ -8,8 +8,8 @@ Authenticating users
 
 - [x] Saving and loading users
 - [x] Registering new users
-- [ ] Logging in registered users
-- [ ] User-loading middleware
+- [x] Logging in registered users
+- [x] User-loading middleware
 
 Advanced routing techniques
 
