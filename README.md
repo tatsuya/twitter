@@ -14,7 +14,7 @@ Authenticating users
 Advanced routing techniques
 
 - [x] Validating user content submission
-- [ ] Route-specific middleware
+- [x] Route-specific middleware
 - [ ] Implementing pagination
 
 Creating a public REST API

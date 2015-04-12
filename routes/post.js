@@ -12,6 +12,7 @@ router.get('/', function(req, res) {
 
 router.post('/',
   validate.required('entry[title]'),
+  validate.lengthAbove('entry[title]', 4),
   function(req, res, next) {
     var data = req.body.entry;
 
