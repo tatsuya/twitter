@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  include ./menu.jade
+
+  each entry in entries
+    .entry
+      h3= entry.title
+      p= entry.body
+      p Posted by #{entry.username}

@@ -13,7 +13,7 @@ Authenticating users
 
 Advanced routing techniques
 
-- [ ] Validating user content submission
+- [x] Validating user content submission
 - [ ] Route-specific middleware
 - [ ] Implementing pagination
 
