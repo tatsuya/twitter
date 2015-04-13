@@ -40,13 +40,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(user);
 
-app.use('/', routes);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/entries', entries);
 app.use('/post', post);
+app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

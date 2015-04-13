@@ -15,7 +15,7 @@ Advanced routing techniques
 
 - [x] Validating user content submission
 - [x] Route-specific middleware
-- [ ] Implementing pagination
+- [x] Implementing pagination
 
 Creating a public REST API
 

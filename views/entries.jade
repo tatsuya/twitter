@@ -3,6 +3,8 @@ extends layout
 block content
   include ./menu.jade
 
+  h1= title
+
   each entry in entries
     .entry
       h3= entry.title

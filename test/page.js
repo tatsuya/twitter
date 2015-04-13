@@ -15,7 +15,7 @@ describe('page', function() {
   function getMockRequest(currentPage) {
     return {
       params: {
-        page: 1
+        page: currentPage
       }
     };
   }
@@ -26,7 +26,7 @@ describe('page', function() {
     };
   }
 
-  it('should parse \'number of items: 15, items per page: 5, current page: 1\'', function(done) {
+  it('should parse for first page \'number of items: 15, items per page: 5, current page: 1\'', function(done) {
     var middleware = getMiddleware(15, 5);
     var req = getMockRequest(1);
     var res = getMockResponse();
@@ -37,6 +37,24 @@ describe('page', function() {
         perpage: 5,
         from: 0,
         to: 4,
+        total: 15,
+        count: 3
+      });
+      done();
+    });
+  });
+
+  it('should parse for second page \'number of items: 15, items per page: 5, current page: 1\'', function(done) {
+    var middleware = getMiddleware(15, 5);
+    var req = getMockRequest(2);
+    var res = getMockResponse();
+
+    middleware(req, res, function() {
+      assert.deepEqual(res.locals.page, {
+        number: 1,
+        perpage: 5,
+        from: 5,
+        to: 9,
         total: 15,
         count: 3
       });
