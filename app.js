@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 
 var flash = require('./lib/flash');
 
+var auth = require('./lib/middleware/auth');
 var user = require('./lib/middleware/user');
 
 var routes = require('./routes/index');
@@ -17,6 +18,7 @@ var login = require('./routes/login');
 var logout = require('./routes/logout');
 var entries = require('./routes/entries');
 var post = require('./routes/post');
+var api = require('./routes/api');
 
 var app = express();
 
@@ -38,8 +40,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/api', auth);
 app.use(user);
 
+app.use('/api', api);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/login', login);
