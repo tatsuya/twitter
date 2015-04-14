@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var router = express.Router();
 
@@ -8,7 +10,7 @@ router.get('/', function(req, res) {
   res.render('login', { title: 'Login' });
 });
 
-router.post('/', function(req, res) {
+router.post('/', function(req, res, next) {
   var data = req.body.user;
   User.authenticate(data.name, data.pass, function(err, user) {
     if (err) {

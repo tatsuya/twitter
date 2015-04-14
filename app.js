@@ -12,7 +12,6 @@ var auth = require('./lib/middleware/auth');
 var user = require('./lib/middleware/user');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var register = require('./routes/register');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
@@ -44,7 +43,6 @@ app.use('/api', auth);
 app.use(user);
 
 app.use('/api', api);
-app.use('/users', users);
 app.use('/register', register);
 app.use('/login', login);
 app.use('/logout', logout);
