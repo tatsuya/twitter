@@ -26,5 +26,5 @@ Creating a public REST API
 
 Error handling
 
-- [ ] Handling 404 errors
-- [ ] Handling errors
+- [x] Handling 404 errors
+- [x] Handling errors
