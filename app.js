@@ -46,8 +46,8 @@ app.use('/api', api);
 app.use('/register', register);
 app.use('/login', login);
 app.use('/logout', logout);
-app.use('/entries', entries);
 app.use('/post', post);
+app.use('/entries', entries);
 app.use('/', routes);
 
 // catch 404 and forward to error handler

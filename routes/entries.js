@@ -4,13 +4,18 @@ var express = require('express');
 var router = express.Router();
 
 var validate = require('../lib/middleware/validate');
+var page = require('../lib/middleware/page');
 
 var Entry = require('../lib/entry');
 
-router.get('/', function(req, res, next) {
-  Entry.getRange(0, -1, function(err, entries) {
+router.get('/:page?', page(Entry.count, 5), function(req, res, next) {
+  var page = req.page;
+  Entry.getRange(page.from, page.to, function(err, entries) {
     if (err) {
       return next(err);
+    }
+    if (req.remoteUser) {
+      return res.json(entries);
     }
     res.render('entries', {
       title: 'Entries',
@@ -35,7 +40,11 @@ router.post('/',
       if (err) {
         return next(err);
       }
-      res.redirect('/');
+      if (req.remoteUser) {
+        res.json({ message: 'Entry added.' });
+      } else {
+        res.redirect('/');
+      }
     });
   }
 );

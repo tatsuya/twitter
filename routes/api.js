@@ -3,9 +3,9 @@
 var express = require('express');
 var router = express.Router();
 
-var page = require('../lib/middleware/page');
 var User = require('../lib/user');
-var Entry = require('../lib/entry');
+
+var entries = require('./entries');
 
 /**
  * Fetch the user by ID. If the user exists, the user data will be passed to
@@ -24,14 +24,6 @@ router.get('/user/:id', function(req, res, next) {
   });
 });
 
-router.get('/entries/:page?', page(Entry.count, 5), function(req, res, next) {
-  var page = req.page;
-  Entry.getRange(page.from, page.to, function(err, entries) {
-    if (err) {
-      return next(err);
-    }
-    res.json(entries);
-  });
-});
+router.use('/entries', entries);
 
 module.exports = router;
