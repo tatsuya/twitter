@@ -6,10 +6,11 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var flash = require('./lib/flash');
-
+var flash = require('./lib/middleware/flash');
 var auth = require('./lib/middleware/auth');
 var user = require('./lib/middleware/user');
+
+var User = require('./lib/user');
 
 var routes = require('./routes/index');
 var register = require('./routes/register');
@@ -39,8 +40,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api', auth);
-app.use(user);
+app.use('/api', auth(User.authenticate, 'shoutbox'));
+app.use(user());
 
 app.use('/api', api);
 app.use('/register', register);
