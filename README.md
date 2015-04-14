@@ -19,10 +19,10 @@ Advanced routing techniques
 
 Creating a public REST API
 
-- [ ] Designing the API
-- [ ] Addding Basic authentication
-- [ ] Implementing routing
-- [ ] Enabling content negotiation
+- [x] Designing the API
+- [x] Addding Basic authentication
+- [x] Implementing routing
+- [-] Enabling content negotiation
 
 Error handling
 
