@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "restart": "node_modules/.bin/nodemon ./bin/www",
     "test": "node_modules/.bin/mocha --reporter spec",
-    "lint": "node_modules/.bin/jshint lib routes"
+    "lint": "node_modules/.bin/jshint app.js lib routes"
   },
   "dependencies": {
     "bcrypt": "~0.8.2",
