@@ -3,13 +3,23 @@ extends layout
 block content
   include ./menu.jade
 
-  .container
-    h1= title
+  .container(style="margin-top: 15px; margin-bottom: 15px;")
+    .row
+      .col-md-3
+        if user
+          .panel.panel-default
+            .panel-heading
+              a(href="/")= user.name
+            .panel-body ...
 
-    each entry in entries
-      .entry
-        h3= entry.title
-        p= entry.body
-        p Posted by #{entry.username}
+      .col-md-6
+        ul.list-group
+          each entry in entries
+            li.list-group-item
+              h3= entry.title
+              p= entry.body
+              p Posted by #{entry.username}
 
-    include ./pager.jade
+        include ./pager.jade
+      .col-md-3
+
