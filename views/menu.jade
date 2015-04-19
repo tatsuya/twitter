@@ -6,7 +6,9 @@ nav.navbar.navbar-fixed-top
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href="#") Twitter
+      div(style="padding-top: 10px; padding-bottom: 10px;")
+        a(href="#")
+          img.img-responsive(src="/img/twitter.png", style="width: 30px; height: 30px;")
     #navbar.collapse.navbar-collapse
       ul.nav.navbar-nav.navbar-right
         if user
@@ -21,11 +23,3 @@ nav.navbar.navbar-fixed-top
             a(href="/login") login
           li
             a(href="/register") register
-//- #menu
-//-   if user
-//-     span.name= user.name
-//-     a(href="/post") post
-//-     a(href="/logout") logout
-//-   else
-//-     a(href="/login") login
-//-     a(href="/register") register
