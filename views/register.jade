@@ -3,15 +3,16 @@ extends layout
 block content
   include ./menu.jade
 
-  h1= title
-  p Fill in the form below to sign up!
+  .container
+    h1= title
+    p Fill in the form below to sign up!
 
-  include ./messages.jade
+    include ./messages.jade
 
-  form(action="/register" method="post")
-    p
-      input(type="text" name="user[name]" placeholder="Username")
-    p
-      input(type="text" name="user[pass]" placeholder="Password")
-    p
-      input(type="submit" value="Sign Up")
+    form(action="/register" method="post")
+      p
+        input(type="text" name="user[name]" placeholder="Username")
+      p
+        input(type="text" name="user[pass]" placeholder="Password")
+      p
+        input(type="submit" value="Sign Up")

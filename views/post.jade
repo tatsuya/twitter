@@ -3,15 +3,16 @@ extends layout
 block content
   include ./menu.jade
 
-  h1= title
-  p Fill in the form below to add a new post.
+  .container
+    h1= title
+    p Fill in the form below to add a new post.
 
-  include ./messages.jade
+    include ./messages.jade
 
-  form(action="/entries" method="post")
-    p
-      input(type="text" name="entry[title]" placeholder="Title")
-    p
-      textarea(name="entry[body]" placeholder="Body")
-    p
-      input(type="submit" value="Post")
+    form(action="/entries" method="post")
+      p
+        input(type="text" name="entry[title]" placeholder="Title")
+      p
+        textarea(name="entry[body]" placeholder="Body")
+      p
+        input(type="submit" value="Post")

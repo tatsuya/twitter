@@ -1,8 +1,31 @@
-#menu
-  if user
-    span.name= user.name
-    a(href="/post") post
-    a(href="/logout") logout
-  else
-    a(href="/login") login
-    a(href="/register") register
+nav.navbar.navbar-fixed-top
+  .container
+    .navbar-header
+      button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar")
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href="#") Twitter
+    #navbar.collapse.navbar-collapse
+      ul.nav.navbar-nav.navbar-right
+        if user
+          li
+            a(href="/")= user.name
+          li
+            a(href="/post") post
+          li
+            a(href="/logout") logout
+        else
+          li
+            a(href="/login") login
+          li
+            a(href="/register") register
+//- #menu
+//-   if user
+//-     span.name= user.name
+//-     a(href="/post") post
+//-     a(href="/logout") logout
+//-   else
+//-     a(href="/login") login
+//-     a(href="/register") register
