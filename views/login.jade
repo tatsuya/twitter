@@ -4,15 +4,14 @@ block content
   include ./menu.jade
 
   .container
-    h1= title
-    p Fill in the form below to sign in!
+    form.form-signin(action="/login" method="post")
+      h2= title
+      p Fill in the form below to sign in!
 
-    include ./messages.jade
-
-    form(action="/login" method="post")
+      include ./messages.jade
       p
-        input(type="text" name="user[name]" placeholder="Username")
+        input.form-control(type="text" name="user[name]" placeholder="Username")
       p
-        input(type="text" name="user[pass]" placeholder="Password")
+        input.form-control(type="text" name="user[pass]" placeholder="Password")
       p
-        input(type="submit" value="Login")
+        input.btn.btn-default(type="submit" value="Login")

@@ -4,15 +4,14 @@ block content
   include ./menu.jade
 
   .container
-    h1= title
-    p Fill in the form below to sign up!
+    form.form-signup(action="/register" method="post")
+      h2= title
+      p Fill in the form below to sign up!
 
-    include ./messages.jade
-
-    form(action="/register" method="post")
+      include ./messages.jade
       p
-        input(type="text" name="user[name]" placeholder="Username")
+        input.form-control(type="text" name="user[name]" placeholder="Username")
       p
-        input(type="text" name="user[pass]" placeholder="Password")
+        input.form-control(type="text" name="user[pass]" placeholder="Password")
       p
-        input(type="submit" value="Sign Up")
+        input.btn.btn-default(type="submit" value="Sign Up")
