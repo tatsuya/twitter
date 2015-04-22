@@ -4,15 +4,15 @@ block content
   include ./menu.jade
 
   .container
-    h1= title
-    p Fill in the form below to add a new post.
+    form.form-post(action="/entries" method="post")
+      h2= title
+      p Fill in the form below to add a new post.
 
-    include ./messages.jade
+      include ./messages.jade
 
-    form(action="/entries" method="post")
       p
-        input(type="text" name="entry[title]" placeholder="Title")
+        input.form-control(type="text" name="entry[title]" placeholder="Title")
       p
-        textarea(name="entry[body]" placeholder="Body")
+        textarea.form-control(name="entry[body]" placeholder="Body" rows="3")
       p
-        input(type="submit" value="Post")
+        input.btn.btn-default(type="submit" value="Post")

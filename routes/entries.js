@@ -28,10 +28,15 @@ router.post('/',
   validate.required('entry[title]'),
   validate.lengthAbove('entry[title]', 4),
   function(req, res, next) {
+    if (!res.locals.user) {
+      return next(new Error('Cannot to retrieve user info'));
+    }
+
+    var username = res.locals.user.name;
     var data = req.body.entry;
 
     var entry = new Entry({
-      username: res.locals.user.name,
+      username: username,
       title: data.title,
       body: data.body
     });
