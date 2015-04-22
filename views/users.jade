@@ -6,6 +6,11 @@ block content
   .container(style="margin-top: 15px; margin-bottom: 15px;")
     .row
       .col-md-3
+        if user
+          .panel.panel-default
+            .panel-heading
+              a(href="/users")= user.name
+            .panel-body ...
 
       .col-md-6
         ul.list-group
