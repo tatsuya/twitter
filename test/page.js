@@ -14,7 +14,7 @@ describe('page', function() {
 
   function getMockRequest(currentPage) {
     return {
-      params: {
+      query: {
         page: currentPage
       }
     };
