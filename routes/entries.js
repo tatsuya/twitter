@@ -3,6 +3,8 @@
 var express = require('express');
 var router = express.Router();
 
+var async = require('async');
+
 var validate = require('../lib/middleware/validate');
 var page = require('../lib/middleware/page');
 
@@ -10,18 +12,38 @@ var Entry = require('../lib/entry');
 
 router.get('/', page(Entry.count, 5), function(req, res, next) {
   var page = req.page;
-  Entry.getRange(page.from, page.to, function(err, entries) {
+  async.parallel({
+    entries: function(callback) {
+      Entry.getRange(page.from, page.to, callback);
+    },
+    count: Entry.count
+  }, function(err, results) {
     if (err) {
       return next(err);
     }
+    var entries = results.entries;
+    var count = results.count;
     if (req.remoteUser) {
       return res.json(entries);
     }
     res.render('entries', {
       title: 'Entries',
-      entries: entries
+      entries: entries,
+      count: count
     });
   });
+  // Entry.getRange(page.from, page.to, function(err, entries) {
+  //   if (err) {
+  //     return next(err);
+  //   }
+  //   if (req.remoteUser) {
+  //     return res.json(entries);
+  //   }
+  //   res.render('entries', {
+  //     title: 'Entries',
+  //     entries: entries
+  //   });
+  // });
 });
 
 router.post('/',
