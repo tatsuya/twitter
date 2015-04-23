@@ -16,17 +16,16 @@ router.get('/', function(req, res, next) {
     if (err) {
       return next(err);
     }
-    console.log(res.locals.user);
     var filteredEntries = entries.filter(function(entry) {
       return entry.username === res.locals.user.name;
     });
-    console.log(filteredEntries);
     if (req.remoteUser) {
       return res.json(filteredEntries);
     }
     res.render('users', {
       title: 'Users',
-      entries: filteredEntries
+      entries: filteredEntries,
+      count: filteredEntries.length
     });
   });
 });
