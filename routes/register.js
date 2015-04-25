@@ -26,7 +26,8 @@ router.post('/', function(req, res, next) {
 
     user = new User({
       name: data.name,
-      pass: data.pass
+      pass: data.pass,
+      fullname: data.fullname
     });
 
     user.save(function(err) {
