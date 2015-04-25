@@ -7,11 +7,15 @@ block content
     .row
       .col-md-3
         if user
-          .panel.panel-default
-            .panel-heading
-              a(href="/users").text-muted @#{user.name}
-            .panel-body
-              a(href="/users") TWEETS #{count}
+          .list-group
+            .list-group-item
+              h4.list-group-item-heading= user.fullname
+              p.list-group-item-text
+                a.text-muted(href="/users") @#{user.name}
+            .list-group-item
+              p.list-group-item-text.text-muted TWEETS
+              h4.list-group-item-heading
+                a(href="/users") #{count}
 
       .col-md-6
         ul.list-group
