@@ -8,67 +8,55 @@ var async = require('async');
 var validate = require('../lib/middleware/validate');
 var page = require('../lib/middleware/page');
 
-var Entry = require('../lib/entry');
+var Tweet = require('../lib/tweet');
 
-router.get('/', page(Entry.count, 5), function(req, res, next) {
+router.get('/', page(Tweet.count, 5), function(req, res, next) {
   var page = req.page;
   async.parallel({
-    entries: function(callback) {
-      Entry.getRange(page.from, page.to, callback);
+    tweets: function(callback) {
+      Tweet.getRange(page.from, page.to, callback);
     },
-    count: Entry.count
+    count: Tweet.count
   }, function(err, results) {
     if (err) {
       return next(err);
     }
-    var entries = results.entries;
+    var tweets = results.tweets;
     var count = results.count;
     if (req.remoteUser) {
-      return res.json(entries);
+      return res.json(tweets);
     }
-    res.render('entries', {
-      title: 'Entries',
-      entries: entries,
+    res.render('tweets', {
+      title: 'Tweets',
+      tweets: tweets,
       count: count
     });
   });
-  // Entry.getRange(page.from, page.to, function(err, entries) {
-  //   if (err) {
-  //     return next(err);
-  //   }
-  //   if (req.remoteUser) {
-  //     return res.json(entries);
-  //   }
-  //   res.render('entries', {
-  //     title: 'Entries',
-  //     entries: entries
-  //   });
-  // });
 });
 
 router.post('/',
-  validate.required('entry[title]'),
-  validate.lengthAbove('entry[title]', 4),
+  validate.required('tweet[title]'),
+  validate.lengthAbove('tweet[title]', 4),
   function(req, res, next) {
     if (!res.locals.user) {
       return next(new Error('Cannot retrieve user info'));
     }
 
     var username = res.locals.user.name;
-    var data = req.body.entry;
+    var data = req.body.tweet;
 
-    var entry = new Entry({
+    var tweet = new Tweet({
       username: username,
       title: data.title,
       body: data.body
     });
 
-    entry.save(function(err) {
+    tweet.save(function(err) {
       if (err) {
         return next(err);
       }
       if (req.remoteUser) {
-        res.json({ message: 'Entry added.' });
+        res.json({ message: 'Tweet added.' });
       } else {
         res.redirect('/');
       }

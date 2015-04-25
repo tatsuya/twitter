@@ -4,7 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 var User = require('../lib/user');
-var Entry = require('../lib/entry');
+var Tweet = require('../lib/tweet');
 
 router.get('/', function(req, res, next) {
   if (!res.locals.user) {
@@ -12,20 +12,20 @@ router.get('/', function(req, res, next) {
     return res.redirect('/');
   }
 
-  Entry.getRange(0, -1, function(err, entries) {
+  Tweet.getRange(0, -1, function(err, tweets) {
     if (err) {
       return next(err);
     }
-    var filteredEntries = entries.filter(function(entry) {
-      return entry.username === res.locals.user.name;
+    var filteredTweets = tweets.filter(function(tweet) {
+      return tweet.username === res.locals.user.name;
     });
     if (req.remoteUser) {
-      return res.json(filteredEntries);
+      return res.json(filteredTweets);
     }
     res.render('users', {
       title: 'Users',
-      entries: filteredEntries,
-      count: filteredEntries.length
+      tweets: filteredTweets,
+      count: filteredTweets.length
     });
   });
 });

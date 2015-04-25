@@ -5,7 +5,7 @@ var router = express.Router();
 
 var User = require('../lib/user');
 
-var entries = require('./entries');
+var tweets = require('./tweets');
 
 /**
  * Fetch the user by ID. If the user exists, the user data will be passed to
@@ -24,6 +24,6 @@ router.get('/user/:id', function(req, res, next) {
   });
 });
 
-router.use('/entries', entries);
+router.use('/tweets', tweets);
 
 module.exports = router;

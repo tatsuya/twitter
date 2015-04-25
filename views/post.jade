@@ -4,15 +4,15 @@ block content
   include ./menu.jade
 
   .container
-    form.form-post(action="/entries" method="post")
+    form.form-post(action="/tweets" method="post")
       h2= title
       p Fill in the form below to add a new post.
 
       include ./messages.jade
 
       p
-        input.form-control(type="text" name="entry[title]" placeholder="Title")
+        input.form-control(type="text" name="tweet[title]" placeholder="Title")
       p
-        textarea.form-control(name="entry[body]" placeholder="Body" rows="3")
+        textarea.form-control(name="tweet[body]" placeholder="Body" rows="3")
       p
         input.btn.btn-default(type="submit" value="Post")
