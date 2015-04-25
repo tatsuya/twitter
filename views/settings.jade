@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  include ./menu.jade
+
+  .container(style="margin-top: 15px; margin-bottom: 15px;")
+    .row
+      .col-md-3
+        .list-group
+          .list-group-item
+            h4.list-group-item-heading= user.fullname
+            p.list-group-item-text
+              a.text-muted(href="/users") @#{user.name}
+
+      .col-md-6
+        .list-group
+          .list-group-item
+            form.form-horizontal(actions="/settings" method="post")
+
+              include ./messages.jade
+
+              .form-group
+                label.col-sm-3.control-label(for="input-fullname") Full name
+                .col-sm-9
+                  input#input-fullname.form-control(type="text" name="user[fullname]" placeholder="Full name" value=user.fullname)
+              .form-group
+                label.col-sm-3.control-label(for="input-username") Username
+                .col-sm-9
+                  input#input-username.form-control(type="text" name="user[name]" placeholder="Username" value=user.name)
+              .form-group
+                .col-sm-offset-3.col-sm-9
+                  button.btn.btn-default(type="submit") Save changes
+

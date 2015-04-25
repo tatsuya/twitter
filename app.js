@@ -20,6 +20,7 @@ var login = require('./routes/login');
 var logout = require('./routes/logout');
 var entries = require('./routes/entries');
 var users = require('./routes/users');
+var settings = require('./routes/settings');
 var post = require('./routes/post');
 var api = require('./routes/api');
 
@@ -52,6 +53,7 @@ app.use('/logout', logout);
 app.use('/post', post);
 app.use('/entries', entries);
 app.use('/users', users);
+app.use('/settings', settings);
 app.use('/', routes);
 
 // catch 404 and forward to error handler
