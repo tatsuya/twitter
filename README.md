@@ -6,6 +6,13 @@ Twitter-like application, built with [Node][node] and [Redis][redis].
 
 https://twitterlikeapp.herokuapp.com/
 
+## Features
+
+- [x] Sign up / Log in / Log out
+- [x] Post tweet
+- [ ] Follow user
+- [ ] Favorite tweet
+
 ## Development
 
 ### Download project
