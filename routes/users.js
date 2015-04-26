@@ -12,20 +12,19 @@ router.get('/', function(req, res, next) {
     return res.redirect('/');
   }
 
-  Tweet.getRange(0, -1, function(err, tweets) {
+  Tweet.filter(function filterByUsername(tweet) {
+    return tweet.username === res.locals.user.name;
+  }, function(err, tweets) {
     if (err) {
       return next(err);
     }
-    var filteredTweets = tweets.filter(function(tweet) {
-      return tweet.username === res.locals.user.name;
-    });
     if (req.remoteUser) {
-      return res.json(filteredTweets);
+      return res.json(tweets);
     }
     res.render('users', {
       title: 'Users',
-      tweets: filteredTweets,
-      count: filteredTweets.length
+      tweets: tweets,
+      count: tweets.length
     });
   });
 });
