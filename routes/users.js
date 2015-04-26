@@ -3,7 +3,6 @@
 var express = require('express');
 var router = express.Router();
 
-var User = require('../lib/user');
 var Tweet = require('../lib/tweet');
 
 router.get('/', function(req, res, next) {

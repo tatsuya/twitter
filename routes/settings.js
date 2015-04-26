@@ -43,7 +43,7 @@ router.post('/', function(req, res, next) {
           return next(err);
         }
 
-        user.name = data.name
+        user.name = data.name;
         user.fullname = data.fullname;
 
         user.save(function(err) {
