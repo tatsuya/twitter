@@ -21,8 +21,12 @@ block content
         ul.list-group
           each tweet in tweets
             li.list-group-item
-              p= tweet.text
-              p.text-muted @#{tweet.user.name}
+              p.list-group-item-heading
+                a(href="/users")
+                  strong #{tweet.user.fullname}&nbsp;
+                  span.text-muted @#{tweet.user.name}
+              p.list-group-item-text= tweet.text
+
 
         include ./pager.jade
       .col-md-3

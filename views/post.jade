@@ -6,11 +6,10 @@ block content
   .container
     form.form-post(action="/tweets" method="post")
       h2= title
-      p Fill in the form below to add a new post.
 
       include ./messages.jade
 
       p
-        textarea.form-control(name="tweet[text]" placeholder="Body" rows="3")
+        textarea.form-control(name="tweet[text]" placeholder="What's happening?" rows="3")
       p
-        input.btn.btn-default(type="submit" value="Post")
+        input.btn.btn-default(type="submit" value="Tweet")
