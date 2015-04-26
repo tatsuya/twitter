@@ -35,8 +35,8 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
 });
 
 router.post('/',
-  // validate.required('tweet[title]'),
-  // validate.lengthAbove('tweet[title]', 4),
+  validate.required('tweet[text]'),
+  validate.lengthLessThanOrEqualTo('tweet[text]', 140),
   function(req, res, next) {
     if (!res.locals.user) {
       return next(new Error('Cannot retrieve user info'));
