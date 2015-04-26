@@ -62,9 +62,9 @@ Deploy an app:
 $ git push heroku master
 ```
 
-## Author
+## License
 
-Tatsuya Oiwa
+MIT © Tatsuya Oiwa
 
 [node]: https://nodejs.org/
 [redis]: http://redis.io/
