@@ -23,9 +23,20 @@ router.get('/', function(req, res, next) {
     if (req.remoteUser) {
       return res.json(tweets);
     }
+
+    var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
+      // Pass true to get the value without the suffix.
+      //
+      // Examples:
+      //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+      //   moment([2007, 0, 29]).fromNow(true); // 4 years
+      tweet.created_at = moment(tweet.created_at).fromNow(true);
+      return tweet;
+    });
+
     res.render('users', {
       title: 'Users',
-      tweets: tweets,
+      tweets: formattedTweets,
       count: tweets.length
     });
   });

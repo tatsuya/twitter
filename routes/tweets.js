@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 var async = require('async');
+var moment = require('moment');
 
 var validate = require('../lib/middleware/validate');
 var page = require('../lib/middleware/page');
@@ -23,12 +24,24 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
     }
     var tweets = results.tweets;
     var count = results.count;
+
     if (req.remoteUser) {
       return res.json(tweets);
     }
+
+    var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
+      // Pass true to get the value without the suffix.
+      //
+      // Examples:
+      //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+      //   moment([2007, 0, 29]).fromNow(true); // 4 years
+      tweet.created_at = moment(tweet.created_at).fromNow(true);
+      return tweet;
+    });
+
     res.render('tweets', {
       title: 'Tweets',
-      tweets: tweets,
+      tweets: formattedTweets,
       count: count
     });
   });
@@ -45,8 +58,11 @@ router.post('/',
     var user = res.locals.user;
     var data = req.body.tweet;
 
+    var date = new Date();
+
     var tweet = new Tweet({
       text: data.text,
+      created_at: date.toISOString(),
       user: {
         id: user.id,
         name: user.name,
