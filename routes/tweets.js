@@ -35,20 +35,23 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
 });
 
 router.post('/',
-  validate.required('tweet[title]'),
-  validate.lengthAbove('tweet[title]', 4),
+  // validate.required('tweet[title]'),
+  // validate.lengthAbove('tweet[title]', 4),
   function(req, res, next) {
     if (!res.locals.user) {
       return next(new Error('Cannot retrieve user info'));
     }
 
-    var username = res.locals.user.name;
+    var user = res.locals.user;
     var data = req.body.tweet;
 
     var tweet = new Tweet({
-      username: username,
-      title: data.title,
-      body: data.body
+      text: data.text,
+      user: {
+        id: user.id,
+        name: user.name,
+        fullname: user.fullname
+      }
     });
 
     tweet.save(function(err) {

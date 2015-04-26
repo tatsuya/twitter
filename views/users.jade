@@ -21,8 +21,7 @@ block content
         ul.list-group
           each tweet in tweets
             li.list-group-item
-              h3= tweet.title
-              p= tweet.body
-              p.text-muted @#{tweet.username}
+              p= tweet.text
+              p.text-muted @#{tweet.user.name}
 
       .col-md-3

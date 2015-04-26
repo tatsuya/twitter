@@ -12,7 +12,10 @@ router.get('/', function(req, res, next) {
   }
 
   Tweet.filter(function filterByUsername(tweet) {
-    return tweet.username === res.locals.user.name;
+    if (!tweet.user) {
+      return false;
+    }
+    return tweet.user.id === res.locals.user.id;
   }, function(err, tweets) {
     if (err) {
       return next(err);
