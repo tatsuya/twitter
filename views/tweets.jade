@@ -25,7 +25,7 @@ block content
                 a(href="/users")
                   strong #{tweet.user.fullname}&nbsp;
                   span.text-muted @#{tweet.user.name}
-              p.list-group-item-text= tweet.text
+              p.list-group-item-text(style="word-wrap: break-word;")= tweet.text
 
 
         include ./pager.jade
