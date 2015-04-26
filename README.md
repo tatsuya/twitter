@@ -1,34 +1,73 @@
-# shoutbox
+# twitter
 
-Learning materials for Node.js in Action, Chapter 9 - Advanced Express.
+Twitter-like application, built with [Node][node] and [Redis][redis].
 
 ## Live demo
 
 https://twitterlikeapp.herokuapp.com/
 
-## TODOs
+## Development
 
-Authenticating users
+### Download project
 
-- [x] Saving and loading users
-- [x] Registering new users
-- [x] Logging in registered users
-- [x] User-loading middleware
+First, clone this repository. When download finished, move into the project directy then run:
 
-Advanced routing techniques
+```
+$ npm install
+```
 
-- [x] Validating user content submission
-- [x] Route-specific middleware
-- [x] Implementing pagination
+This will install all required dependent modules.
 
-Creating a public REST API
+### Install Redis
 
-- [x] Designing the API
-- [x] Addding Basic authentication
-- [x] Implementing routing
-- [-] Enabling content negotiation
+Since this application requires Redis installed on your machine, you'll need to install it. For Mac OSX, the most easiest way would be using [Homebrew][homebrew].
 
-Error handling
+```
+$ brew install redis
+```
 
-- [x] Handling 404 errors
-- [x] Handling errors
+Otherwise, please check [Redis's official documentaiton][redis] out.
+
+### Start application
+
+This application is based on [Express][express] framework. To start the application, run:
+
+```
+$ npm start
+```
+
+It will serve application at `http://localhost:3000/`.
+
+## Deployment
+
+For deployment, `Procfile` is packaged as a default default configuration for integration with Heroku. If you are not familiar with Heroku I would recommend you to first read through the documentation of [how to get started with Node.js on Heroku][heroku-getting-started-with-node].
+
+The whole deployment process should be as simple as the follwing three steps.
+
+Login to Heroku:
+
+```
+$ heroku login
+````
+
+Create an app on Heroku:
+
+```
+$ heroku create
+```
+
+Deploy an app:
+
+```
+$ git push heroku master
+```
+
+## Author
+
+Tatsuya Oiwa
+
+[node]: https://nodejs.org/
+[redis]: http://redis.io/
+[homebrew]: http://brew.sh/
+[express]: http://expressjs.com/
+[heroku-getting-started-with-node]: https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction
