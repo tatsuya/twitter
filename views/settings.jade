@@ -4,7 +4,7 @@ block styles
   link(rel='stylesheet', href='/css/style.css')
 
 block content
-  include ./menu.jade
+  include components/menu
 
   .container(style="margin-top: 15px; margin-bottom: 15px;")
     .row
@@ -23,7 +23,7 @@ block content
           .list-group-item
             form.form-horizontal(actions="/settings" method="post")
 
-              include ./messages.jade
+              include components/messages
 
               .form-group
                 label.col-sm-3.control-label(for="input-fullname") Full name

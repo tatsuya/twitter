@@ -4,14 +4,14 @@ block styles
   link(rel='stylesheet', href='/css/style.css')
 
 block content
-  include ./menu.jade
+  include components/menu
 
   .container
     form.form-signup(action="/register" method="post")
       h2= title
       p Fill in the form below to sign up!
 
-      include ./messages.jade
+      include components/messages
 
       p
         input.form-control(type="text" name="user[fullname]" placeholder="Full name")

@@ -4,13 +4,13 @@ block styles
   link(rel='stylesheet', href='/css/style.css')
 
 block content
-  include ./menu.jade
+  include components/menu.jade
 
   .container
     form.form-post(action="/tweets" method="post")
       h2= title
 
-      include ./messages.jade
+      include components/messages.jade
 
       p
         textarea.form-control(name="tweet[text]" placeholder="What's happening?" rows="3")
