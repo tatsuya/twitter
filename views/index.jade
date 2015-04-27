@@ -1,7 +1,39 @@
 extends layout
 
+block styles
+  link(rel='stylesheet', href='/css/cover.css')
+
 block content
   include ./menu.jade
 
-  h1= title
-  p Welcome to #{title}
+  //- h1= title
+  //- p Welcome to #{title}
+
+  .site-wrapper
+    .site-wrapper-inner
+      .cover-container
+        //- .masthead.clearfix
+        //-   .inner
+        //-     h3.masthead-brand Cover
+        //-     nav
+        //-       ul.nav.masthead-nav
+        //-         li.active
+        //-           a(href='#') Home
+        //-         li
+        //-           a(href='#') Features
+        //-         li
+        //-           a(href='#') Contact
+        .inner.cover
+          h1.cover-heading Welcom to Twitter.
+          p.lead
+            | Connect with your friends — and other fascinating people. Get in-the-moment updates on the things that interest you. And watch events unfold, in real time, from every angle.
+          p.lead
+            a.btn.btn-lg.btn-default(href='/login') Log in
+        //- .mastfoot
+        //-   .inner
+        //-     p
+        //-       | Cover template for 
+        //-       a(href='http://getbootstrap.com') Bootstrap
+        //-       | , by 
+        //-       a(href='https://twitter.com/mdo') @mdo
+        //-       | .

@@ -12,6 +12,9 @@ var page = require('../lib/middleware/page');
 var Tweet = require('../lib/tweet');
 
 router.get('/', page(Tweet.count, 5), function(req, res, next) {
+  if (!res.locals.user) {
+    return res.render('index');
+  }
   var page = req.page;
   async.parallel({
     tweets: function(callback) {
