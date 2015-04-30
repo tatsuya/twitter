@@ -12,7 +12,7 @@ nav.navbar.navbar-default.navbar-fixed-top(style="background-color: #fff;")
       ul.nav.navbar-nav.navbar-right
         if user
           li.dropdown
-            a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
+            a.dropdown-toggle(href='#' data-toggle='dropdown' role='button' aria-expanded='false')
                 | #{user.name}&nbsp;
                 span.caret
               ul.dropdown-menu(role='menu')
@@ -24,7 +24,8 @@ nav.navbar.navbar-default.navbar-fixed-top(style="background-color: #fff;")
                 li
                   a(href="/logout") Log out
           li
-            a(href="/post") Tweet
+            div(style="padding-top: 10px; padding-bottom: 10px;")
+              a.btn.btn-info(href="/post" role="button") Tweet
         else
           li
             a(href="/login") Log in
