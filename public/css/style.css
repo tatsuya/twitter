@@ -2,8 +2,11 @@ body {
   padding-top: 50px;
 }
 
-.form-signin, .form-signup, .form-post {
+.login, .signup {
   max-width: 330px;
-  padding: 15px;
   margin: 0 auto;
+}
+
+.signup-helper {
+  margin-top: 10px;
 }

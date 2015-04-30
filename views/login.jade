@@ -7,15 +7,24 @@ block content
   include components/menu
 
   .container
-    form.form-signin(action="/login" method="post")
-      h2= title
-      p Fill in the form below to sign in!
+    .row
+      .col-md-8.col-md-offset-2
+        .panel.panel-default(style="margin-top: 10px;")
+          .panel-body
+            form.login(action="/login" method="post")
+              h2= title
+              p Fill in the form below to sign in!
 
-      include components/messages
+              include components/messages
 
-      p
-        input.form-control(type="text" name="user[name]" placeholder="Username")
-      p
-        input.form-control(type="password" name="user[pass]" placeholder="Password")
-      p
-        input.btn.btn-default(type="submit" value="Login")
+              p
+                input.form-control(type="text" name="user[name]" placeholder="Username")
+              p
+                input.form-control(type="password" name="user[pass]" placeholder="Password")
+              p
+                input.btn.btn-info(type="submit" value="Login")
+          .panel-footer
+            .login
+              p.signup-helper New to Twitter?&nbsp;
+                a(href="register") Sign up now »
+
