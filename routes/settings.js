@@ -69,4 +69,9 @@ router.post('/', function(req, res, next) {
   }
 });
 
+router.delete('/', function(req, res, next) {
+  // TODO
+  res.redirect('back');
+});
+
 module.exports = router;
