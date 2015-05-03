@@ -35,6 +35,9 @@ block content
                 .col-sm-9
                   input#input-username.form-control(type="text" name="user[name]" placeholder="Username" value=user.name)
               .form-group
-                .col-sm-offset-3.col-sm-9
+                .col-sm-9.col-sm-offset-3
                   button.btn.btn-default(type="submit") Save changes
-
+          .list-group-item
+            .row
+              .col-sm-9.col-sm-offset-3
+                a(href="/settings/deactivate") Deactivate my account

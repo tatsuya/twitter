@@ -69,8 +69,18 @@ router.post('/', function(req, res, next) {
   }
 });
 
-router.delete('/', function(req, res, next) {
-  // TODO
+router.get('/deactivate', function(req, res, next) {
+  if (!res.locals.user) {
+    return res.redirect('/login');
+  }
+  res.render('deactivate', { title: 'Settings' });
+});
+
+router.post('/deactivate', function(req, res, next) {
+  var user = req.user;
+
+  console.log(user);
+
   res.redirect('back');
 });
 
