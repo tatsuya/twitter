@@ -79,9 +79,22 @@ router.get('/deactivate', function(req, res, next) {
 router.post('/deactivate', function(req, res, next) {
   var user = req.user;
 
-  console.log(user);
-
-  res.redirect('back');
+  User.deleteId(user.name, function(err) {
+    if (err) {
+      return next(err);
+    }
+    User.delete(user.id, function(err) {
+      if (err) {
+        return next(err);
+      }
+      req.session.destroy(function(err) {
+        if (err) {
+          return next(err);
+        }
+        res.redirect('/');
+      });
+    });
+  });
 });
 
 module.exports = router;
