@@ -49,15 +49,22 @@ block content
           each tweet in tweets
             li.list-group-item
               p.list-group-item-heading
-                a(href="/users")
+                a(href="/users").text-gray-dark
                   strong #{tweet.user.fullname}
                   span &nbsp;
                   span.text-muted @#{tweet.user.name}
-                  span &nbsp;-&nbsp;
+                span &nbsp;-&nbsp;
+                a(href="/users")
                   span.text-muted= tweet.created_at
               p.list-group-item-text(style="word-wrap: break-word; margin-bottom: 10px;")= tweet.text
               p.list-group-item-text
-                a(href="/users").text-muted
-                  span.glyphicon.glyphicon-option-horizontal(aria-hidden="true")
-
+                ul.list-inline
+                  li
+                    span.glyphicon.glyphicon-star.text-muted
+                  li.dropdown
+                    a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-expanded="true").text-muted
+                      span.glyphicon.glyphicon-option-horizontal(aria-hidden="true")
+                    ul.dropdown-menu(role='menu')
+                      li(role='presentation')
+                        a(role='menuitem', tabindex='-1', href='/users') Delete tweet
       .col-md-3
