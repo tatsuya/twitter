@@ -2,6 +2,34 @@ body {
   padding-top: 50px;
 }
 
+/**
+ * Bootstrap extended styles
+ */
+
+.text-gray-darker {
+  color: #222;
+}
+
+.text-gray-dark {
+  color: #333;
+}
+
+.text-gray {
+  color: #555;
+}
+
+.text-gray-light {
+  color: #777;
+}
+
+.text-gray-lighter {
+  color: #eee;
+}
+
+/**
+ * Common components
+ */
+
 .login, .signup {
   max-width: 330px;
   margin: 0 auto;

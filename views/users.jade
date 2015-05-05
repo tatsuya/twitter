@@ -11,27 +11,29 @@ block content
     .container
       .row
         .col-md-3
-          h4= user.fullname
-          p.text-muted @#{user.name}
+          h4
+            a.text-gray-dark(href="/users")= user.fullname
+          p
+            a.text-muted(href="/users") @#{user.name}
         .col-md-6
           ul.nav.navbar-nav
             li.active
-              a(href='#about')
+              a(href='/users')
                 .text-muted TWEETS
                 .text-center
                   strong #{count}
             li
-              a(href='#about')
+              a(href='/users')
                 .text-muted FOLLOWING
                 .text-center
                   strong #{count}
             li
-              a(href='#about')
+              a(href='/users')
                 .text-muted FOLLOWERS
                 .text-center
                   strong #{count}
             li
-              a(href='#about')
+              a(href='/users')
                 .text-muted FAVORITES
                 .text-center
                   strong #{count}
