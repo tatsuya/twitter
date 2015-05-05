@@ -55,6 +55,9 @@ block content
                   span.text-muted @#{tweet.user.name}
                   span &nbsp;-&nbsp;
                   span.text-muted= tweet.created_at
-              p.list-group-item-text(style="word-wrap: break-word;")= tweet.text
+              p.list-group-item-text(style="word-wrap: break-word; margin-bottom: 10px;")= tweet.text
+              p.list-group-item-text
+                a(href="/users").text-muted
+                  span.glyphicon.glyphicon-option-horizontal(aria-hidden="true")
 
       .col-md-3
