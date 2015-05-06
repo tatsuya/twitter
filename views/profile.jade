@@ -2,7 +2,7 @@ extends layout
 
 block styles
   link(rel="stylesheet", href="/css/style.css")
-  link(rel="stylesheet", href="/css/users.css")
+  link(rel="stylesheet", href="/css/profile.css")
 
 block content
   include components/menu
@@ -12,28 +12,28 @@ block content
       .row
         .col-md-3
           h4
-            a.text-gray-dark(href="/users")= user.fullname
+            a.text-gray-dark(href="/profile")= user.fullname
           p
-            a.text-muted(href="/users") @#{user.name}
+            a.text-muted(href="/profile") @#{user.name}
         .col-md-6
           ul.nav.navbar-nav
             li.active
-              a(href="/users")
+              a(href="/profile")
                 .text-muted TWEETS
                 .text-center
                   strong #{count}
             li
-              a(href="/users")
+              a(href="/profile")
                 .text-muted FOLLOWING
                 .text-center
                   strong #{count}
             li
-              a(href="/users")
+              a(href="/profile")
                 .text-muted FOLLOWERS
                 .text-center
                   strong #{count}
             li
-              a(href="/users")
+              a(href="/profile")
                 .text-muted FAVORITES
                 .text-center
                   strong #{count}
@@ -49,12 +49,12 @@ block content
           each tweet in tweets
             li.list-group-item
               p.list-group-item-heading
-                a(href="/users").text-gray-dark
+                a(href="/profile").text-gray-dark
                   strong #{tweet.user.fullname}
                   span &nbsp;
                   span.text-muted @#{tweet.user.name}
                 span &nbsp;-&nbsp;
-                a(href="/users")
+                a(href="/profile")
                   span.text-muted= tweet.created_at
               p.list-group-item-text(style="word-wrap: break-word; margin-bottom: 10px;")= tweet.text
               p.list-group-item-text
@@ -79,12 +79,12 @@ block content
                             h4#modal-label-delete-tweet.modal-title Are you sure you want to delete this Tweet?
                           .modal-body
                             p
-                              a(href="/users").text-gray-dark
+                              a(href="/profile").text-gray-dark
                                 strong #{tweet.user.fullname}
                                 span &nbsp;
                                 span.text-muted @#{tweet.user.name}
                               span &nbsp;-&nbsp;
-                              a(href="/users")
+                              a(href="/profile")
                                 span.text-muted= tweet.created_at
                             p(style="word-wrap: break-word;")= tweet.text
                           .modal-footer

@@ -52,7 +52,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/post', post);
 app.use('/tweets', tweets);
-app.use('/users', profile);
+app.use('/profile', profile);
 app.use('/settings', settings);
 app.use('/', routes);
 

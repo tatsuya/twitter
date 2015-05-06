@@ -14,20 +14,20 @@ block content
           .list-group
             .list-group-item
               h4.list-group-item-heading
-                a.text-gray-dark(href="/users")=  user.fullname
+                a.text-gray-dark(href="/profile")=  user.fullname
               p.list-group-item-text
-                a.text-muted(href="/users") @#{user.name}
+                a.text-muted(href="/profile") @#{user.name}
             .list-group-item
               p.list-group-item-text.text-muted TWEETS
               h4.list-group-item-heading
-                a(href="/users") #{count}
+                a(href="/profile") #{count}
 
       .col-md-6
         ul.list-group
           each tweet in tweets
             li.list-group-item
               p.list-group-item-heading
-                a(href="/users")
+                a(href="/profile")
                   strong #{tweet.user.fullname}
                   span &nbsp;
                   span.text-muted @#{tweet.user.name}
