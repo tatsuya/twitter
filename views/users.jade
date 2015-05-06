@@ -1,8 +1,8 @@
 extends layout
 
 block styles
-  link(rel='stylesheet', href='/css/style.css')
-  link(rel='stylesheet', href='/css/users.css')
+  link(rel="stylesheet", href="/css/style.css")
+  link(rel="stylesheet", href="/css/users.css")
 
 block content
   include components/menu
@@ -18,22 +18,22 @@ block content
         .col-md-6
           ul.nav.navbar-nav
             li.active
-              a(href='/users')
+              a(href="/users")
                 .text-muted TWEETS
                 .text-center
                   strong #{count}
             li
-              a(href='/users')
+              a(href="/users")
                 .text-muted FOLLOWING
                 .text-center
                   strong #{count}
             li
-              a(href='/users')
+              a(href="/users")
                 .text-muted FOLLOWERS
                 .text-center
                   strong #{count}
             li
-              a(href='/users')
+              a(href="/users")
                 .text-muted FAVORITES
                 .text-center
                   strong #{count}
@@ -64,7 +64,31 @@ block content
                   li.dropdown
                     a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-expanded="true").text-muted
                       span.glyphicon.glyphicon-option-horizontal(aria-hidden="true")
-                    ul.dropdown-menu(role='menu')
-                      li(role='presentation')
-                        a(role='menuitem', tabindex='-1', href='/users') Delete tweet
-      .col-md-3
+                    ul.dropdown-menu(role="menu")
+                      li(role="presentation")
+                        //- Button trigger modal
+                        a(role="menuitem", tabindex="-1" data-toggle="modal", data-target="#modal-delete-tweet-" + tweet.id)
+                          | Delete tweet
+                    //- Modal
+                    .modal.fade(id="modal-delete-tweet-" + tweet.id tabindex="-1", role="dialog", aria-labelledby="modal-label-delete-tweet", aria-hidden="true")
+                      .modal-dialog
+                        .modal-content
+                          .modal-header
+                            button.close(type="button", data-dismiss="modal", aria-label="Close")
+                              span(aria-hidden="true") ×
+                            h4#modal-label-delete-tweet.modal-title Are you sure you want to delete this Tweet?
+                          .modal-body
+                            p
+                              a(href="/users").text-gray-dark
+                                strong #{tweet.user.fullname}
+                                span &nbsp;
+                                span.text-muted @#{tweet.user.name}
+                              span &nbsp;-&nbsp;
+                              a(href="/users")
+                                span.text-muted= tweet.created_at
+                            p(style="word-wrap: break-word;")= tweet.text
+                          .modal-footer
+                            form(action="/tweets/" + tweet.id method="post")
+                              button.btn.btn-default(type="button", data-dismiss="modal") Close
+                              input(type="hidden" name="_method" value="delete")
+                              input.btn.btn-primary(type="submit" value="Delete" style="margin-left: 5px;")

@@ -86,4 +86,33 @@ router.post('/',
   }
 );
 
+router.post('/:id', function(req, res, next) {
+  if (!res.locals.user) {
+    return res.redirect('/login');
+  }
+
+  if (req.body._method !== 'delete') {
+    console.log('Unsupported HTTP method: ' + req.body._method);
+    return res.redirect('/login');
+  }
+
+  Tweet.filter(function filterById(tweet) {
+    return req.params.id == tweet.id;
+  }, function(err, tweets) {
+    if (err) {
+      return next(err);
+    }
+
+    async.each(tweets, function(obj, fn) {
+      var tweet = new Tweet(obj);
+      tweet.delete(fn);
+    }, function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/');
+    });
+  });
+});
+
 module.exports = router;
