@@ -4,12 +4,12 @@ var express = require('express');
 var router = express.Router();
 
 var moment = require('moment');
+var util = require('util');
 
 var Tweet = require('../lib/tweet');
 
 router.get('/', function(req, res, next) {
   if (!res.locals.user) {
-    console.log('Cannot retrieve users info');
     return res.redirect('/');
   }
 
@@ -36,8 +36,10 @@ router.get('/', function(req, res, next) {
       return tweet;
     });
 
-    res.render('users', {
-      title: 'Users',
+    var title = util.format('%s (@%s)', req.user.fullname, req.user.name);
+
+    res.render('profile', {
+      title: title,
       tweets: formattedTweets,
       count: tweets.length
     });

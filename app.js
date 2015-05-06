@@ -19,7 +19,7 @@ var register = require('./routes/register');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
 var tweets = require('./routes/tweets');
-var users = require('./routes/users');
+var profile = require('./routes/profile');
 var settings = require('./routes/settings');
 var post = require('./routes/post');
 var api = require('./routes/api');
@@ -52,7 +52,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/post', post);
 app.use('/tweets', tweets);
-app.use('/users', users);
+app.use('/users', profile);
 app.use('/settings', settings);
 app.use('/', routes);
 
