@@ -69,7 +69,7 @@ router.post('/', function(req, res, next) {
   }
 });
 
-router.get('/deactivate', function(req, res, next) {
+router.get('/deactivate', function(req, res) {
   if (!res.locals.user) {
     return res.redirect('/login');
   }
