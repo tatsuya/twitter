@@ -95,9 +95,10 @@ router.post('/:id', function(req, res, next) {
     console.log('Unsupported HTTP method: ' + req.body._method);
     return res.redirect('/login');
   }
+  var id = parseInt(req.params.id, 10);
 
   Tweet.filter(function filterById(tweet) {
-    return req.params.id == tweet.id;
+    return tweet.id === id;
   }, function(err, tweets) {
     if (err) {
       return next(err);
