@@ -10,7 +10,7 @@ block content
   nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
     .container
       .row
-        .col-md-3
+        .col-md-3.text-center
           h4
             a.text-gray-dark(href="/profile")= user.fullname
           p
@@ -19,29 +19,30 @@ block content
           ul.nav.navbar-nav
             li.active
               a(href="/profile")
-                .text-muted TWEETS
+                .text-center.text-muted TWEETS
                 .text-center
                   strong #{count}
             li
               a(href="/profile")
-                .text-muted FOLLOWING
+                .text-center.text-muted FOLLOWING
                 .text-center
                   strong #{count}
             li
               a(href="/profile")
-                .text-muted FOLLOWERS
+                .text-center.text-muted FOLLOWERS
                 .text-center
                   strong #{count}
             li
               a(href="/profile")
-                .text-muted FAVORITES
+                .text-center.text-muted FAVORITES
                 .text-center
                   strong #{count}
         .col-md-3
           ul.nav.navbar-nav.navbar-right
             li
-              div(style="padding: 18px 10px;")
+              div.text-center(style="padding: 18px 10px;")
                 a.btn.btn-default(href="/settings" role="button") Edit profile
+
   .container
     .row
       .col-md-6.col-md-offset-3
