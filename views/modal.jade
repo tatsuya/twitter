@@ -4,16 +4,33 @@ block styles
 
 block content
   // Button trigger modal
-  button.btn.btn-primary.btn-lg(type='button', data-toggle='modal', data-target='#myModal')
+  button.btn.btn-primary.btn-lg(type='button', data-toggle='modal', data-target='#myModal1')
     | Launch demo modal
   // Modal
-  #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+  #myModal1.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel1', aria-hidden='true')
     .modal-dialog
       .modal-content
         .modal-header
           button.close(type='button', data-dismiss='modal', aria-label='Close')
             span(aria-hidden='true') ×
-          h4#myModalLabel.modal-title Modal title
+          h4#myModalLabel1.modal-title Modal title 1
+        .modal-body
+          | ...
+        .modal-footer
+          button.btn.btn-default(type='button', data-dismiss='modal') Close
+          button.btn.btn-primary(type='button') Save changes
+
+  // Button trigger modal
+  button.btn.btn-primary.btn-lg(type='button', data-toggle='modal', data-target='#myModal2')
+    | Launch demo modal
+  // Modal
+  #myModal2.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel2', aria-hidden='true')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h4#myModalLabel2.modal-title Modal title 2
         .modal-body
           | ...
         .modal-footer
