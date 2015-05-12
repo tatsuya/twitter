@@ -54,11 +54,6 @@ app.use('/post', post);
 app.use('/tweets', tweets);
 app.use('/profile', profile);
 app.use('/settings', settings);
-app.use('/modal', function(req, res, next) {
-    res.render('modal', {
-      items: [0, 1, 2, 3, 4]
-    });
-});
 app.use('/', routes);
 
 // catch 404 and forward to error handler
