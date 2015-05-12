@@ -3,20 +3,25 @@ extends layout
 block styles
 
 block content
-  each item in items
-    // Button trigger modal
-    button.btn.btn-primary.btn-lg(type='button', data-toggle='modal', data-target='#myModal' + item)
-      | Launch demo modal
-    // Modal
-    .modal.fade(id='myModal' + item, tabindex='-1', role='dialog', aria-labelledby='myModalLabel' + item, aria-hidden='true')
-      .modal-dialog
-        .modal-content
-          .modal-header
-            button.close(type='button', data-dismiss='modal', aria-label='Close')
-              span(aria-hidden='true') ×
-            h4.modal-title(id='#myModalLabel' + item) Modal title #{item}
-          .modal-body
-            | ...
-          .modal-footer
-            button.btn.btn-default(type='button', data-dismiss='modal') Close
-            button.btn.btn-primary(type='button') Save changes
+  .container
+    .row
+      .col-md-6.col-md-offset-3
+        ul.list-group
+          each item in items
+            li.list-group-item
+              // Button trigger modal
+              button.btn.btn-primary.btn-lg(type='button', data-toggle='modal', data-target='#myModal' + item)
+                | Launch demo modal
+              // Modal
+              .modal.fade(id='myModal' + item, tabindex='-1', role='dialog', aria-labelledby='myModalLabel' + item, aria-hidden='true')
+                .modal-dialog
+                  .modal-content
+                    .modal-header
+                      button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                      h4.modal-title(id='#myModalLabel' + item) Modal title #{item}
+                    .modal-body
+                      | ...
+                    .modal-footer
+                      button.btn.btn-default(type='button', data-dismiss='modal') Close
+                      button.btn.btn-primary(type='button') Save changes
