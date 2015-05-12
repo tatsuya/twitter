@@ -71,8 +71,9 @@ block content
                     ul.dropdown-menu(role="menu")
                       li(role="presentation")
                         //- Button trigger modal
-                        a(role="menuitem", tabindex="-1" data-toggle="modal" data-target="#myModal" + i)
-                          | Delete tweet
+                        //- a(role="menuitem", tabindex="-1" data-toggle="modal" data-target="#myModal" + i)
+                        //-   | Delete tweet
+                        a(role="menuitem" tabindex="-1" href="/profile")
                 //- Modal
                 .modal.fade(id='myModal' + i, tabindex='-1', role='dialog', aria-labelledby='myModalLabel' + i, aria-hidden='true')
                   .modal-dialog
