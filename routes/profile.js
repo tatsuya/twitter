@@ -38,7 +38,7 @@ router.get('/', function(req, res, next) {
 
     var title = util.format('%s (@%s)', req.user.fullname, req.user.name);
 
-    res.render('modal', {
+    res.render('profile', {
       title: title,
       tweets: formattedTweets,
       count: tweets.length
