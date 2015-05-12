@@ -59,10 +59,21 @@ block content
                   span.text-muted= tweet.created_at
               p.list-group-item-text(style="word-wrap: break-word; margin-bottom: 10px;")= tweet.text
               p.list-group-item-text
-                // Button trigger modal
-                button.btn.btn-primary.btn-lg(type='button', data-toggle='modal', data-target='#myModal' + i)
+                //- Button trigger modal
+                //- button.btn.btn-primary.btn-lg(type='button', data-toggle='modal', data-target='#myModal' + i)
                   | Launch demo modal
-                // Modal
+                ul.list-inline
+                  li
+                    span.glyphicon.glyphicon-star.text-muted
+                  li.dropdown
+                    a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-expanded="true").text-muted
+                      span.glyphicon.glyphicon-option-horizontal(aria-hidden="true")
+                    ul.dropdown-menu(role="menu")
+                      li(role="presentation")
+                        //- Button trigger modal
+                        a(role="menuitem", tabindex="-1" data-toggle="modal" data-target="#myModal" + i)
+                          | Delete tweet
+                //- Modal
                 .modal.fade(id='myModal' + i, tabindex='-1', role='dialog', aria-labelledby='myModalLabel' + i, aria-hidden='true')
                   .modal-dialog
                     .modal-content
@@ -81,8 +92,6 @@ block content
                             span.text-muted= tweet.created_at
                         p(style="word-wrap: break-word;")= tweet.text
                       .modal-footer
-                        //- button.btn.btn-default(type='button', data-dismiss='modal') Close
-                        //- button.btn.btn-primary(type='button') Save changes
                         form(action="/tweets/" + tweet.id method="post")
                           button.btn.btn-default(type="button", data-dismiss="modal") Close
                           input(type="hidden" name="_method" value="delete")
