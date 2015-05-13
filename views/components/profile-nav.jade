@@ -17,12 +17,12 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
             a(href="/users/" + user.name)
               .text-center.text-muted FOLLOWING
               .text-center
-                strong #{count}
+                strong #{followings_count}
           li
             a(href="/users/" + user.name)
               .text-center.text-muted FOLLOWERS
               .text-center
-                strong #{count}
+                strong #{followers_count}
           li
             a(href="/users/" + user.name)
               .text-center.text-muted FAVORITES
@@ -32,9 +32,8 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
         ul.nav.navbar-nav.navbar-right
           li
             div.text-center(style="padding: 18px 10px;")
-              if isMe
+              if is_me
                 a.btn.btn-default(href="/settings" role="button") Edit profile
               else
                 form(action="/follow/" + user.name method="post")
                   input.btn.btn-default(type="submit" value="Follow")
-                  //- a.btn.btn-default(href="/follow/" + user.name) Follow

@@ -12,15 +12,15 @@ nav.navbar.navbar-default.navbar-fixed-top(style="background-color: #fff;")
       ul.nav.navbar-nav.navbar-right
         if user
           li.dropdown
-            a.dropdown-toggle(href='#' data-toggle='dropdown' role='button' aria-expanded='false')
+            a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-expanded="false")
                 | #{user.name}&nbsp;
                 span.caret
-              ul.dropdown-menu(role='menu')
+              ul.dropdown-menu(role="menu")
                 li
-                  a(href='/profile') View profile
+                  a(href="/users/" + user.name) View profile
                 li.divider
                 li
-                  a(href='/settings') Settings
+                  a(href="/settings") Settings
                 li
                   a(href="/logout") Log out
           li

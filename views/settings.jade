@@ -14,7 +14,7 @@ block content
           .list-group-item
             h4.list-group-item-heading= user.fullname
             p.list-group-item-text
-              a.text-muted(href="/profile") @#{user.name}
+              a.text-muted(href="/users/" + user.name) @#{user.name}
 
       .col-md-6
         .list-group

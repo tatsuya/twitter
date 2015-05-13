@@ -15,12 +15,12 @@ block content
           each tweet, i in tweets
             li.list-group-item
               p.list-group-item-heading
-                a(href="/profile").text-gray-dark
+                a(href="/users/" + tweet.user.name).text-gray-dark
                   strong #{tweet.user.fullname}
                   span &nbsp;
                   span.text-muted @#{tweet.user.name}
                 span &nbsp;-&nbsp;
-                a(href="/profile")
+                a(href="/users/" + tweet.user.name)
                   span.text-muted= tweet.created_at
               p.list-group-item-text(style="word-wrap: break-word; margin-bottom: 10px;")= tweet.text
               p.list-group-item-text

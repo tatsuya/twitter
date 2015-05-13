@@ -14,13 +14,13 @@ block content
           .list-group
             .list-group-item
               h4.list-group-item-heading
-                a.text-gray-dark(href="/profile")=  user.fullname
+                a.text-gray-dark(href="/users/" + user.name)=  user.fullname
               p.list-group-item-text
-                a.text-muted(href="/profile") @#{user.name}
+                a.text-muted(href="/users/" + user.name) @#{user.name}
             .list-group-item
               p.list-group-item-text.text-muted TWEETS
               h4.list-group-item-heading
-                a(href="/profile") #{count}
+                a(href="/users/" + user.name) #{count}
 
       .col-md-6
         ul.list-group
