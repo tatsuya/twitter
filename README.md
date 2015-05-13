@@ -8,6 +8,8 @@ https://twitterlikeapp.herokuapp.com/
 
 ## Features
 
+The following features checked are currently implemented, otherwise they are still work in progress.
+
 - [x] Sign up / Log in / Log out
 - [x] Post tweet
 - [ ] Follow user
