@@ -12,7 +12,9 @@ The following features checked are currently implemented, otherwise they are sti
 
 - [x] Sign up / Log in / Log out
 - [x] Post tweet
-- [ ] Follow user
+- [x] Delete tweet
+- [x] Follow user
+- [x] Unfollow user
 - [ ] Favorite tweet
 
 ## Design
