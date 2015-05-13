@@ -1,0 +1,29 @@
+extends layout
+
+block styles
+  link(rel="stylesheet", href="/css/style.css")
+
+block content
+  include components/menu
+
+  include components/profile-nav
+
+  .container
+    .row
+      .col-md-6.col-md-offset-3
+        ul.list-group
+          each tweet, i in tweets
+            li.list-group-item
+              p.list-group-item-heading
+                a(href="/profile").text-gray-dark
+                  strong #{tweet.user.fullname}
+                  span &nbsp;
+                  span.text-muted @#{tweet.user.name}
+                span &nbsp;-&nbsp;
+                a(href="/profile")
+                  span.text-muted= tweet.created_at
+              p.list-group-item-text(style="word-wrap: break-word; margin-bottom: 10px;")= tweet.text
+              p.list-group-item-text
+                ul.list-inline
+                  li
+                    span.glyphicon.glyphicon-star.text-muted

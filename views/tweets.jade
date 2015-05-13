@@ -27,7 +27,7 @@ block content
           each tweet in tweets
             li.list-group-item
               p.list-group-item-heading
-                a(href="/profile")
+                a(href="/users/" + tweet.user.name)
                   strong #{tweet.user.fullname}
                   span &nbsp;
                   span.text-muted @#{tweet.user.name}

@@ -13,9 +13,7 @@ block content
           .panel-heading Compose new Tweet
           .panel-body
             form(action="/tweets" method="post")
-
               include components/messages.jade
-
               p
                 textarea.form-control(name="tweet[text]" placeholder="What's happening?" rows="3")
               p

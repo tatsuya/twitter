@@ -1,0 +1,40 @@
+nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
+  .container
+    .row
+      .col-md-3.text-center
+        h4
+          a.text-gray-dark(href="/users/" + user.name)= user.fullname
+        p
+          a.text-muted(href="/users/" + user.name) @#{user.name}
+      .col-md-6
+        ul.nav.navbar-nav
+          li.active
+            a(href="/users/" + user.name)
+              .text-center.text-muted TWEETS
+              .text-center
+                strong #{count}
+          li
+            a(href="/users/" + user.name)
+              .text-center.text-muted FOLLOWING
+              .text-center
+                strong #{count}
+          li
+            a(href="/users/" + user.name)
+              .text-center.text-muted FOLLOWERS
+              .text-center
+                strong #{count}
+          li
+            a(href="/users/" + user.name)
+              .text-center.text-muted FAVORITES
+              .text-center
+                strong #{count}
+      .col-md-3
+        ul.nav.navbar-nav.navbar-right
+          li
+            div.text-center(style="padding: 18px 10px;")
+              if isMe
+                a.btn.btn-default(href="/settings" role="button") Edit profile
+              else
+                form(action="/follow/" + user.name method="post")
+                  input.btn.btn-default(type="submit" value="Follow")
+                  //- a.btn.btn-default(href="/follow/" + user.name) Follow

@@ -6,6 +6,9 @@ var router = express.Router();
 var User = require('../lib/user');
 
 router.get('/', function(req, res) {
+  if (res.locals.user) {
+    return res.redirect('/');
+  }
   req.flash();
   res.render('login', { title: 'Login' });
 });
@@ -21,7 +24,7 @@ router.post('/', function(req, res, next) {
       return res.redirect('back');
     }
     req.session.uid = user.id;
-    return res.redirect('/');
+    res.redirect('/');
   });
 });
 
