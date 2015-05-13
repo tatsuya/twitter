@@ -70,7 +70,7 @@ router.get('/:name', function(req, res, next) {
             title: util.format('%s (@%s)', user.fullname, user.name),
             user: user,
             tweets: formattedTweets,
-            count: tweets.length,
+            tweets_count: tweets.length,
             followers_count: followerIds.length,
             followings_count: followingIds.length,
             is_me: isMe,

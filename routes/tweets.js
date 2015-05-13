@@ -10,11 +10,13 @@ var validate = require('../lib/middleware/validate');
 var page = require('../lib/middleware/page');
 
 var Tweet = require('../lib/tweet');
+var User = require('../lib/user');
 
 router.get('/', page(Tweet.count, 5), function(req, res, next) {
   if (!res.locals.user) {
     return res.render('index');
   }
+  var user = res.locals.user;
   var page = req.page;
   async.parallel({
     tweets: function(callback) {
@@ -32,20 +34,34 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
       return res.json(tweets);
     }
 
-    var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
-      // Pass true to get the value without the suffix.
-      //
-      // Examples:
-      //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-      //   moment([2007, 0, 29]).fromNow(true); // 4 years
-      tweet.created_at = moment(tweet.created_at).fromNow(true);
-      return tweet;
-    });
+    async.parallel({
+      followerIds: async.apply(User.getFollowers, user.id),
+      followingIds: async.apply(User.getFollowings, user.id)
+    }, function(err, results) {
+      if (err) {
+        return next(err);
+      }
 
-    res.render('tweets', {
-      title: 'Tweets',
-      tweets: formattedTweets,
-      count: count
+      var followerIds = results.followerIds;
+      var followingIds = results.followingIds;
+
+      var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
+        // Pass true to get the value without the suffix.
+        //
+        // Examples:
+        //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+        //   moment([2007, 0, 29]).fromNow(true); // 4 years
+        tweet.created_at = moment(tweet.created_at).fromNow(true);
+        return tweet;
+      });
+
+      res.render('tweets', {
+        title: 'Twitter',
+        tweets: formattedTweets,
+        tweets_count: count,
+        followers_count: followerIds.length,
+        followings_count: followingIds.length
+      });
     });
   });
 });
