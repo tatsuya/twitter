@@ -11,15 +11,11 @@ var moment = require('moment');
 var util = require('util');
 
 router.get('/:name', function(req, res, next) {
-  var isLoggedIn = false;
-  if (res.locals.user) {
-    isLoggedIn = true;
-  }
-
+  var me = res.locals.user;
   var name = req.params.name;
 
   var isMe = false;
-  if (isLoggedIn && name === res.locals.user.name) {
+  if (me && me.name === name) {
     isMe = true;
   }
 
@@ -39,6 +35,15 @@ router.get('/:name', function(req, res, next) {
       }, function(err, results) {
         if (err) {
           return next(err);
+        }
+
+        var followerIds = results.followerIds;
+        var followingIds = results.followingIds;
+
+        // Check if the user is followed by the user who is currently logged in.
+        var isFollowing = false;
+        if (me && followerIds.indexOf(me.id) > -1) {
+          isFollowing = true;
         }
 
         Tweet.filter(function filterByUsername(tweet) {
@@ -61,16 +66,15 @@ router.get('/:name', function(req, res, next) {
             return tweet;
           });
 
-          var title = util.format('%s (@%s)', user.fullname, user.name);
-
           res.render('users', {
-            title: title,
+            title: util.format('%s (@%s)', user.fullname, user.name),
             user: user,
             tweets: formattedTweets,
             count: tweets.length,
-            followers_count: results.followerIds.length,
-            followings_count: results.followingIds.length,
-            is_me: isMe
+            followers_count: followerIds.length,
+            followings_count: followingIds.length,
+            is_me: isMe,
+            is_following: isFollowing
           });
         });
       });
