@@ -35,8 +35,8 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
     }
 
     async.parallel({
-      followerIds: async.apply(User.getFollowers, user.id),
-      followingIds: async.apply(User.getFollowings, user.id)
+      followerIds: async.apply(User.getFollowerIds, user.id),
+      followingIds: async.apply(User.getFollowingIds, user.id)
     }, function(err, results) {
       if (err) {
         return next(err);

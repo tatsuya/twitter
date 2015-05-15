@@ -2,7 +2,7 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
   .container
     .row
       .col-md-3
-        h4
+        h4(style="margin-top: 15px; margin-bottom: 5px;")
           a.text-gray-dark(href="/users/" + user.name)= user.fullname
         p
           a.text-muted(href="/users/" + user.name) @#{user.name}
@@ -13,7 +13,7 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
               small.text-muted.profile-nav-label TWEETS
               strong #{tweets_count}
           li
-            a(href="/users/" + user.name)
+            a(href="/users/" + user.name + "/followings")
               small.text-muted.profile-nav-label FOLLOWING
               strong #{followings_count}
           li

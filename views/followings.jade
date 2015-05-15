@@ -14,9 +14,9 @@ block content
       .col-md-6.col-md-offset-3
         ul.list-group
           li.list-group-item= title
-          each follower in followers
+          each following in followings
             li.list-group-item
               h4.list-group-item-heading
-                a.text-gray-dark(href="/users/" + follower.name)=  follower.fullname
+                a.text-gray-dark(href="/users/" + following.name)=  following.fullname
               p.list-group-item-text
-                a.text-muted(href="/users/" + follower.name) @#{follower.name}
+                a.text-muted(href="/users/" + following.name) @#{following.name}

@@ -23,10 +23,10 @@ block content
                 a(href="/users/" + user.name) #{tweets_count}
               p.list-group-item-text.text-muted FOLLOWINGS
               h4.list-group-item-heading
-                a(href="/users/" + user.name) #{followings_count}
+                a(href="/users/" + user.name + "/followings") #{followings_count}
               p.list-group-item-text.text-muted FOLLOWERS
               h4.list-group-item-heading
-                a(href="/users/" + user.name) #{followers_count}
+                a(href="/users/" + user.name + "/followers") #{followers_count}
 
       .col-md-6
         ul.list-group
