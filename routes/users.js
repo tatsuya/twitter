@@ -5,8 +5,8 @@ var router = express.Router();
 
 var User = require('../lib/model/user');
 var Tweet = require('../lib/model/tweet');
-var utils = require('../lib/utils');
 
+var util = require('util');
 var async = require('async');
 var moment = require('moment');
 
@@ -24,6 +24,18 @@ function isMe() {
     }
     next();
   };
+}
+
+function formatTweets(tweets) {
+  return tweets.map(function timeCreatedAtFromNow(tweet) {
+    // Pass true to get the value without the suffix.
+    //
+    // Examples:
+    //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+    //   moment([2007, 0, 29]).fromNow(true); // 4 years
+    tweet.created_at = moment(tweet.created_at).fromNow(true);
+    return tweet;
+  });
 }
 
 router.get('/:name', isMe(), function(req, res, next) {
@@ -67,20 +79,10 @@ router.get('/:name', isMe(), function(req, res, next) {
           return next(err);
         }
 
-        var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
-          // Pass true to get the value without the suffix.
-          //
-          // Examples:
-          //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-          //   moment([2007, 0, 29]).fromNow(true); // 4 years
-          tweet.created_at = moment(tweet.created_at).fromNow(true);
-          return tweet;
-        });
-
         res.render('users', {
-          title: utils.format('%s (@%s)', user.fullname, user.name),
+          title: util.format('%s (@%s)', user.fullname, user.name),
           user: user,
-          tweets: formattedTweets,
+          tweets: formatTweets(tweets),
           tweets_count: tweets.length,
           followers_count: followerIds.length,
           followings_count: followingIds.length,
@@ -132,20 +134,10 @@ router.get('/:name/followers', function(req, res, next) {
           return next(err);
         }
 
-        var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
-          // Pass true to get the value without the suffix.
-          //
-          // Examples:
-          //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-          //   moment([2007, 0, 29]).fromNow(true); // 4 years
-          tweet.created_at = moment(tweet.created_at).fromNow(true);
-          return tweet;
-        });
-
         res.render('followers', {
-          title: utils.format('People following %s', user.fullname),
+          title: util.format('People following %s', user.fullname),
           user: user,
-          tweets: formattedTweets,
+          tweets: formatTweets(tweets),
           tweets_count: tweets.length,
           followers: followers,
           followers_count: followers.length,
@@ -198,24 +190,14 @@ router.get('/:name/followings', function(req, res, next) {
           return next(err);
         }
 
-        var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
-          // Pass true to get the value without the suffix.
-          //
-          // Examples:
-          //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-          //   moment([2007, 0, 29]).fromNow(true); // 4 years
-          tweet.created_at = moment(tweet.created_at).fromNow(true);
-          return tweet;
-        });
-
         res.render('followings', {
-          title: utils.format('People followed by %s', user.fullname),
+          title: util.format('People followed by %s', user.fullname),
           user: user,
           followers_count: followerIds.length,
           followings: followings,
           followings_count: followings.length,
           is_following: isFollowing,
-          tweets: formattedTweets,
+          tweets: formatTweets(tweets),
           tweets_count: tweets.length
         });
       });
