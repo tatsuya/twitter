@@ -2,6 +2,7 @@ extends layout
 
 block styles
   link(rel="stylesheet", href="/css/style.css")
+  link(rel="stylesheet", href="/css/users.css")
 
 block content
   include components/menu
@@ -9,7 +10,7 @@ block content
   nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
     .container
       .row
-        .col-md-3.text-center
+        .col-md-3
           h4
             a.text-gray-dark(href="/users/" + user.name)= user.fullname
           p
@@ -18,28 +19,24 @@ block content
           ul.nav.navbar-nav
             li.active
               a(href="/users/" + user.name)
-                .text-center.text-muted TWEETS
-                .text-center
-                  strong #{tweets_count}
+                small.text-muted.profile-nav-label TWEETS
+                strong #{tweets_count}
             li
               a(href="/users/" + user.name)
-                .text-center.text-muted FOLLOWING
-                .text-center
-                  strong #{followings_count}
+                small.text-muted.profile-nav-label FOLLOWING
+                strong #{followings_count}
             li
               a(href="/users/" + user.name)
-                .text-center.text-muted FOLLOWERS
-                .text-center
-                  strong #{followers_count}
+                small.text-muted.profile-nav-label FOLLOWERS
+                strong #{followers_count}
             li
               a(href="/users/" + user.name)
-                .text-center.text-muted FAVORITES
-                .text-center
-                  strong #{tweets_count}
+                small.text-muted.profile-nav-label FAVORITES
+                strong #{tweets_count}
         .col-md-3
           ul.nav.navbar-nav.navbar-right
             li
-              div.text-center(style="padding: 18px 10px;")
+              div(style="padding: 18px 10px;")
                 if is_me
                   a.btn.btn-default(href="/settings" role="button") Edit profile
                 else if is_following
