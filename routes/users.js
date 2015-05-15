@@ -3,8 +3,8 @@
 var express = require('express');
 var router = express.Router();
 
-var User = require('../lib/user');
-var Tweet = require('../lib/tweet');
+var User = require('../lib/model/user');
+var Tweet = require('../lib/model/tweet');
 
 var async = require('async');
 var moment = require('moment');

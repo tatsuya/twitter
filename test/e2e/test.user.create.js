@@ -1,4 +1,4 @@
-var User = require('../lib/user');
+var User = require('../lib/model/user');
 
 var tobi = new User({
   name: 'Tobi',

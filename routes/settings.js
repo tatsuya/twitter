@@ -3,7 +3,7 @@
 var express = require('express');
 var router = express.Router();
 
-var User = require('../lib/user');
+var User = require('../lib/model/user');
 
 router.get('/', function(req, res) {
   if (!res.locals.user) {

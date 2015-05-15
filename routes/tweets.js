@@ -9,8 +9,8 @@ var moment = require('moment');
 var validate = require('../lib/middleware/validate');
 var page = require('../lib/middleware/page');
 
-var Tweet = require('../lib/tweet');
-var User = require('../lib/user');
+var Tweet = require('../lib/model/tweet');
+var User = require('../lib/model/user');
 
 router.get('/', page(Tweet.count, 5), function(req, res, next) {
   if (!res.locals.user) {

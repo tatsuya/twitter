@@ -1,4 +1,4 @@
-var User = require('../lib/user');
+var User = require('../lib/model/user');
 
 User.authenticate('Tobi', 'im not a ferret', function(err, user) {
   if (err) {

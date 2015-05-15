@@ -12,7 +12,7 @@ var flash = require('./lib/middleware/flash');
 var auth = require('./lib/middleware/auth');
 var user = require('./lib/middleware/user');
 
-var User = require('./lib/user');
+var User = require('./lib/model/user');
 
 var routes = require('./routes/index');
 var register = require('./routes/register');

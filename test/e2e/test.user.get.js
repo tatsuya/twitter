@@ -1,4 +1,4 @@
-var User = require('../lib/user');
+var User = require('../lib/model/user');
 
 User.getByName('Tobi', function(err, user) {
   if (err) {
