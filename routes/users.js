@@ -5,10 +5,10 @@ var router = express.Router();
 
 var User = require('../lib/model/user');
 var Tweet = require('../lib/model/tweet');
+var utils = require('../lib/utils');
 
 var async = require('async');
 var moment = require('moment');
-var util = require('util');
 
 /**
  * Express middleware to check if given param name is same as the user name who
@@ -23,7 +23,7 @@ function isMe() {
        res.locals.is_me = true;
     }
     next();
-  }
+  };
 }
 
 router.get('/:name', isMe(), function(req, res, next) {
@@ -78,7 +78,7 @@ router.get('/:name', isMe(), function(req, res, next) {
         });
 
         res.render('users', {
-          title: util.format('%s (@%s)', user.fullname, user.name),
+          title: utils.format('%s (@%s)', user.fullname, user.name),
           user: user,
           tweets: formattedTweets,
           tweets_count: tweets.length,
@@ -143,7 +143,7 @@ router.get('/:name/followers', function(req, res, next) {
         });
 
         res.render('followers', {
-          title: util.format('People following %s', user.fullname),
+          title: utils.format('People following %s', user.fullname),
           user: user,
           tweets: formattedTweets,
           tweets_count: tweets.length,
@@ -209,7 +209,7 @@ router.get('/:name/followings', function(req, res, next) {
         });
 
         res.render('followings', {
-          title: util.format('People followed by %s', user.fullname),
+          title: utils.format('People followed by %s', user.fullname),
           user: user,
           followers_count: followerIds.length,
           followings: followings,
