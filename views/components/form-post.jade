@@ -1,0 +1,8 @@
+form(action="/tweets" method="post")
+  include messages
+  p
+    textarea.form-control(name="tweet[text]" placeholder="What's happening?" rows="3")
+  p
+    button.btn.btn-info.pull-right(type="submit") Tweet
+    //- .pull-right fails with a button in panel. - https://github.com/twbs/bootstrap/issues/8843
+    .clearfix
