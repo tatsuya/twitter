@@ -4,7 +4,7 @@ block styles
   link(rel='stylesheet', href='/css/style.css')
 
 block content
-  include components/menu.jade
+  include components/menu
 
   .container
     .row
@@ -12,9 +12,4 @@ block content
         .panel.panel-default(style="margin-top: 10px;")
           .panel-heading Compose new Tweet
           .panel-body
-            form(action="/tweets" method="post")
-              include components/messages.jade
-              p
-                textarea.form-control(name="tweet[text]" placeholder="What's happening?" rows="3")
-              p
-                input.btn.btn-info.pull-right(type="submit" value="Tweet")
+            include components/form-post
