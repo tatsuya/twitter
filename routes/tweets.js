@@ -68,9 +68,9 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
         user: res.locals.loginUser,
         suggestions: suggestions,
         tweets: formattedTweets,
-        tweets_count: count,
-        followers_count: followerIds.length,
-        followings_count: followingIds.length
+        tweetsCount: count,
+        followersCount: followerIds.length,
+        followingsCount: followingIds.length
       });
     });
   });

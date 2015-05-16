@@ -12,15 +12,15 @@ var moment = require('moment');
 
 /**
  * Express middleware to check if given param name is same as the user name who
- * is currently logged in. If the name is same, then set res.locals.is_me to
+ * is currently logged in. If the name is same, then set res.locals.isMe to
  * true.
  */
 function isMe() {
   return function(req, res, next) {
-    res.locals.is_me = false;
+    res.locals.isMe = false;
     var me = res.locals.loginUser;
     if (me && me.name === req.params.name) {
-       res.locals.is_me = true;
+       res.locals.isMe = true;
     }
     next();
   };
@@ -83,10 +83,10 @@ router.get('/:name', isMe(), function(req, res, next) {
           title: util.format('%s (@%s)', user.fullname, user.name),
           user: user,
           tweets: formatTweets(tweets),
-          tweets_count: tweets.length,
-          followers_count: followerIds.length,
-          followings_count: followingIds.length,
-          is_following: isFollowing
+          tweetsCount: tweets.length,
+          followersCount: followerIds.length,
+          followingsCount: followingIds.length,
+          isFollowing: isFollowing
         });
       });
     });
@@ -139,11 +139,11 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
           view: 'followers',
           user: user,
           tweets: formatTweets(tweets),
-          tweets_count: tweets.length,
+          tweetsCount: tweets.length,
           followers: followers,
-          followers_count: followers.length,
-          followings_count: followingIds.length,
-          is_following: isFollowing
+          followersCount: followers.length,
+          followingsCount: followingIds.length,
+          isFollowing: isFollowing
         });
       });
     });
@@ -195,12 +195,12 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
           title: util.format('People followed by %s', user.fullname),
           view: 'followings',
           user: user,
-          followers_count: followerIds.length,
+          followersCount: followerIds.length,
           followings: followings,
-          followings_count: followings.length,
-          is_following: isFollowing,
+          followingsCount: followings.length,
+          isFollowing: isFollowing,
           tweets: formatTweets(tweets),
-          tweets_count: tweets.length
+          tweetsCount: tweets.length
         });
       });
     });

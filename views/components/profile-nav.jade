@@ -11,22 +11,22 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
           li(class=view || "active")
             a(href="/users/" + user.name)
               small.text-muted.profile-nav-label TWEETS
-              strong #{tweets_count}
+              strong #{tweetsCount}
           li(class=view === "followings" ? "active" : undefined)
             a(href="/users/" + user.name + "/followings")
               small.text-muted.profile-nav-label FOLLOWING
-              strong #{followings_count}
+              strong #{followingsCount}
           li(class=view === "followers" ? "active" : undefined)
             a(href="/users/" + user.name + "/followers")
               small.text-muted.profile-nav-label FOLLOWERS
-              strong #{followers_count}
+              strong #{followersCount}
       .col-md-3
         ul.nav.navbar-nav.navbar-right
           li
             div(style="padding: 18px 10px;")
-              if is_me
+              if isMe
                 a.btn.btn-default(href="/settings" role="button") Edit profile
-              else if is_following
+              else if isFollowing
                 form(action="/follow/" + user.name method="post")
                   input(type="hidden" name="_method" value="delete")
                   input.btn.btn-default(type="submit" value="Unfollow")
