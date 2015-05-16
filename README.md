@@ -88,9 +88,9 @@ It will serve application at `http://localhost:3000/`.
 
 ## Deployment
 
-For deployment, `Procfile` is packaged as a default default configuration for integration with Heroku. If you are not familiar with Heroku I would recommend you to first read through the documentation of [how to get started with Node.js on Heroku][heroku-getting-started-with-node].
+For deployment, `Procfile` is packaged as a default configuration to integrate with Heroku. If you are not familiar with Heroku I would recommend you to first read through the documentation of [how to get started with Node.js on Heroku][heroku-getting-started-with-node].
 
-The whole deployment process should be as simple as the follwing three steps.
+The whole deployment process should be as simple as the follwing 3 steps.
 
 Login to Heroku:
 
