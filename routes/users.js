@@ -93,7 +93,7 @@ router.get('/:name', isMe(), function(req, res, next) {
   });
 });
 
-router.get('/:name/followers', function(req, res, next) {
+router.get('/:name/followers', isMe(), function(req, res, next) {
   var loginUser = res.locals.loginUser;
   var name = req.params.name;
 
@@ -136,6 +136,7 @@ router.get('/:name/followers', function(req, res, next) {
 
         res.render('followers', {
           title: util.format('People following %s', user.fullname),
+          view: 'followers',
           user: user,
           tweets: formatTweets(tweets),
           tweets_count: tweets.length,
@@ -149,7 +150,7 @@ router.get('/:name/followers', function(req, res, next) {
   });
 });
 
-router.get('/:name/followings', function(req, res, next) {
+router.get('/:name/followings', isMe(), function(req, res, next) {
   var loginUser = res.locals.loginUser;
   var name = req.params.name;
 
@@ -192,6 +193,7 @@ router.get('/:name/followings', function(req, res, next) {
 
         res.render('followings', {
           title: util.format('People followed by %s', user.fullname),
+          view: 'followings',
           user: user,
           followers_count: followerIds.length,
           followings: followings,

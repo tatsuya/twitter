@@ -2,7 +2,6 @@ extends layout
 
 block styles
   link(rel='stylesheet', href='/css/style.css')
-  link(rel='stylesheet', href='/css/tweets.css')
 
 block content
   include components/menu
@@ -13,7 +12,7 @@ block content
         if user
           .list-group
             .list-group-item
-              h4.list-group-item-heading
+              h3.list-group-item-heading
                 a.text-gray-dark(href="/users/" + user.name)=  user.fullname
               p.list-group-item-text
                 a.text-muted(href="/users/" + user.name) @#{user.name}
@@ -29,17 +28,33 @@ block content
                 a(href="/users/" + user.name + "/followers") #{followers_count}
 
       .col-md-6
+        if !tweets_count
+          p.lead You haven't tweeted yet.
+        else
+          ul.list-group
+            each tweet in tweets
+              li.list-group-item
+                p.list-group-item-heading
+                  a(href="/users/" + tweet.user.name)
+                    strong #{tweet.user.fullname}
+                    span &nbsp;
+                    span.text-muted @#{tweet.user.name}
+                    span &nbsp;-&nbsp;
+                    span.text-muted= tweet.created_at
+                p.list-group-item-text(style="word-wrap: break-word;")= tweet.text
+
+      .col-md-3
         ul.list-group
-          each tweet in tweets
-            li.list-group-item
-              p.list-group-item-heading
-                a(href="/users/" + tweet.user.name)
-                  strong #{tweet.user.fullname}
-                  span &nbsp;
-                  span.text-muted @#{tweet.user.name}
-                  span &nbsp;-&nbsp;
-                  span.text-muted= tweet.created_at
-              p.list-group-item-text(style="word-wrap: break-word;")= tweet.text
+          li.list-group-item
+            p.lead(style="margin-bottom: 0;") Who to follow
+          li.list-group-item
+            //- a(href="/users/" + tweet.user.name)
+            //-   strong #{tweet.user.fullname}
+            //-   span &nbsp;
+            //-   span.text-muted @#{tweet.user.name}
+          li.list-group-item Morbi leo risus
+          li.list-group-item Porta ac consectetur ac
+          li.list-group-item Vestibulum at eros
 
         include components/pager
       .col-md-3

@@ -8,15 +8,15 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
           a.text-muted(href="/users/" + user.name) @#{user.name}
       .col-md-6
         ul.nav.navbar-nav
-          li.active
+          li(class=view || "active")
             a(href="/users/" + user.name)
               small.text-muted.profile-nav-label TWEETS
               strong #{tweets_count}
-          li
+          li(class=view === "followings" ? "active" : undefined)
             a(href="/users/" + user.name + "/followings")
               small.text-muted.profile-nav-label FOLLOWING
               strong #{followings_count}
-          li
+          li(class=view === "followers" ? "active" : undefined)
             a(href="/users/" + user.name + "/followers")
               small.text-muted.profile-nav-label FOLLOWERS
               strong #{followers_count}

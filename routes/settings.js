@@ -76,7 +76,10 @@ router.get('/deactivate', function(req, res) {
   if (!res.locals.loginUser) {
     return res.redirect('/login');
   }
-  res.render('deactivate', { title: 'Settings' });
+  res.render('deactivate', {
+    title: 'Settings',
+    user: res.locals.loginUser
+  });
 });
 
 router.post('/deactivate', function(req, res, next) {
