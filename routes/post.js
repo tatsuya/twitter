@@ -4,7 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res) {
-  if (!res.locals.user) {
+  if (!res.locals.loginUser) {
     return res.redirect('/login');
   }
   req.flash();

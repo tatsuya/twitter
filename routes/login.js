@@ -6,9 +6,6 @@ var router = express.Router();
 var User = require('../lib/model/user');
 
 router.get('/', function(req, res) {
-  if (res.locals.user) {
-    return res.redirect('/');
-  }
   req.flash();
   res.render('login', { title: 'Login' });
 });

@@ -6,15 +6,18 @@ var router = express.Router();
 var User = require('../lib/model/user');
 
 router.get('/', function(req, res) {
-  if (!res.locals.user) {
+  if (!res.locals.loginUser) {
     return res.redirect('/login');
   }
   req.flash();
-  res.render('settings', { title: 'Settings' });
+  res.render('settings', {
+    title: 'Settings',
+    user: res.locals.loginUser
+  });
 });
 
 router.post('/', function(req, res, next) {
-  var user = req.user;
+  var user = req.loginUser;
   var data = req.body.user;
 
   if (!data.name) {
@@ -70,14 +73,14 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/deactivate', function(req, res) {
-  if (!res.locals.user) {
+  if (!res.locals.loginUser) {
     return res.redirect('/login');
   }
   res.render('deactivate', { title: 'Settings' });
 });
 
 router.post('/deactivate', function(req, res, next) {
-  var user = req.user;
+  var user = req.loginUser;
 
   User.deleteId(user.name, function(err) {
     if (err) {

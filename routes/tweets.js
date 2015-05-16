@@ -13,10 +13,10 @@ var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
 
 router.get('/', page(Tweet.count, 5), function(req, res, next) {
-  if (!res.locals.user) {
+  if (!res.locals.loginUser) {
     return res.render('index');
   }
-  var user = res.locals.user;
+  var loginUser = res.locals.loginUser;
   var page = req.page;
   async.parallel({
     tweets: function(callback) {
@@ -35,8 +35,8 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
     }
 
     async.parallel({
-      followerIds: async.apply(User.getFollowerIds, user.id),
-      followingIds: async.apply(User.getFollowingIds, user.id)
+      followerIds: async.apply(User.getFollowerIds, loginUser.id),
+      followingIds: async.apply(User.getFollowingIds, loginUser.id)
     }, function(err, results) {
       if (err) {
         return next(err);
@@ -57,6 +57,7 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
 
       res.render('tweets', {
         title: 'Twitter',
+        user: res.locals.loginUser,
         tweets: formattedTweets,
         tweets_count: count,
         followers_count: followerIds.length,
@@ -70,11 +71,11 @@ router.post('/',
   validate.required('tweet[text]'),
   validate.lengthLessThanOrEqualTo('tweet[text]', 140),
   function(req, res, next) {
-    if (!res.locals.user) {
-      return next(new Error('Cannot retrieve user info'));
+    if (!res.locals.loginUser) {
+      return res.redirect('login');
     }
 
-    var user = res.locals.user;
+    var loginUser = res.locals.loginUser;
     var data = req.body.tweet;
 
     var date = new Date();
@@ -83,9 +84,9 @@ router.post('/',
       text: data.text,
       created_at: date.toISOString(),
       user: {
-        id: user.id,
-        name: user.name,
-        fullname: user.fullname
+        id: loginUser.id,
+        name: loginUser.name,
+        fullname: loginUser.fullname
       }
     });
 
@@ -103,7 +104,7 @@ router.post('/',
 );
 
 router.post('/:id', function(req, res, next) {
-  if (!res.locals.user) {
+  if (!res.locals.loginUser) {
     return res.redirect('/login');
   }
 

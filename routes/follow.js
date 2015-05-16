@@ -6,27 +6,26 @@ var router = express.Router();
 var User = require('../lib/model/user');
 
 router.post('/:name', function(req, res, next) {
-  if (!res.locals.user) {
+  var loginUser = res.locals.loginUser;
+  if (!loginUser) {
     return res.redirect('/login');
   }
 
-  var me = res.locals.user;
   var name = req.params.name;
-
   User.getId(name, function(err, id) {
     if (err) {
       return next(err);
     }
 
     if (req.body._method === 'delete') {
-      User.unfollow(id, me.id, function(err) {
+      User.unfollow(id, loginUser.id, function(err) {
         if (err) {
           return next(err);
         }
         res.redirect('back');
       });
     } else {
-      User.follow(id, me.id, function(err) {
+      User.follow(id, loginUser.id, function(err) {
         if (err) {
           return next(err);
         }

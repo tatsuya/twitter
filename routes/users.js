@@ -18,7 +18,7 @@ var moment = require('moment');
 function isMe() {
   return function(req, res, next) {
     res.locals.is_me = false;
-    var me = res.locals.user;
+    var me = res.locals.loginUser;
     if (me && me.name === req.params.name) {
        res.locals.is_me = true;
     }
@@ -39,7 +39,7 @@ function formatTweets(tweets) {
 }
 
 router.get('/:name', isMe(), function(req, res, next) {
-  var me = res.locals.user;
+  var loginUser = res.locals.loginUser;
   var name = req.params.name;
 
   User.getByName(name, function(err, user) {
@@ -55,10 +55,10 @@ router.get('/:name', isMe(), function(req, res, next) {
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
-        if (!me) {
+        if (!loginUser) {
           return fn(null, false);
         }
-        User.isFollowing(user.id, me.id, fn);
+        User.isFollowing(user.id, loginUser.id, fn);
       }
     }, function(err, results) {
       if (err) {
@@ -94,7 +94,7 @@ router.get('/:name', isMe(), function(req, res, next) {
 });
 
 router.get('/:name/followers', function(req, res, next) {
-  var me = res.locals.user;
+  var loginUser = res.locals.loginUser;
   var name = req.params.name;
 
   User.getByName(name, function(err, user) {
@@ -110,10 +110,10 @@ router.get('/:name/followers', function(req, res, next) {
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
-        if (!me) {
+        if (!loginUser) {
           return fn(null, false);
         }
-        User.isFollowing(user.id, me.id, fn);
+        User.isFollowing(user.id, loginUser.id, fn);
       }
     }, function(err, results) {
       if (err) {
@@ -150,7 +150,7 @@ router.get('/:name/followers', function(req, res, next) {
 });
 
 router.get('/:name/followings', function(req, res, next) {
-  var me = res.locals.user;
+  var loginUser = res.locals.loginUser;
   var name = req.params.name;
 
   User.getByName(name, function(err, user) {
@@ -166,10 +166,10 @@ router.get('/:name/followings', function(req, res, next) {
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
-        if (!me) {
+        if (!loginUser) {
           return fn(null, false);
         }
-        User.isFollowing(user.id, me.id, fn);
+        User.isFollowing(user.id, loginUser.id, fn);
       }
     }, function(err, results) {
       if (err) {

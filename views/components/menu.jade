@@ -10,14 +10,14 @@ nav.navbar.navbar-default.navbar-fixed-top(style="background-color: #fff;")
         img(src="/img/twitter.png" alt="Twitter" style="width: 30px; height: 30px;")
     #navbar.collapse.navbar-collapse
       ul.nav.navbar-nav.navbar-right
-        if user
+        if loginUser
           li.dropdown
             a.dropdown-toggle(href="#" data-toggle="dropdown" role="button" aria-expanded="false")
-                | #{user.name}&nbsp;
+                | #{loginUser.name}&nbsp;
                 span.caret
               ul.dropdown-menu(role="menu")
                 li
-                  a(href="/users/" + user.name) View profile
+                  a(href="/users/" + loginUser.name) View profile
                 li.divider
                 li
                   a(href="/settings") Settings
