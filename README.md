@@ -8,14 +8,11 @@ https://twitterlikeapp.herokuapp.com/
 
 ## Features
 
-The following features checked are currently implemented, otherwise they are still work in progress.
+The following features checked are currently implemented.
 
-- [x] Sign up / Log in / Log out
+- [x] User authentication
 - [x] Post tweet
-- [x] Delete tweet
 - [x] Follow user
-- [x] Unfollow user
-- [ ] Favorite tweet
 
 ## Design
 
