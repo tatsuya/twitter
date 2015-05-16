@@ -99,15 +99,21 @@ router.post('/',
       }
     });
 
-    tweet.save(function(err) {
+    tweet.save(function(err, tweet) {
       if (err) {
         return next(err);
       }
-      if (req.remoteUser) {
-        res.json({ message: 'Tweet added.' });
-      } else {
-        res.redirect('/');
-      }
+
+      User.addTweet(loginUser.id, tweet.id, date, function(err) {
+        if (err) {
+          return next(err);
+        }
+        if (req.remoteUser) {
+          res.json({ message: 'Tweet added.' });
+        } else {
+          res.redirect('/');
+        }
+      });
     });
   }
 );
