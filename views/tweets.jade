@@ -46,9 +46,9 @@ block content
         include components/pager
 
       .col-md-3
-        ul.list-group
-          li.list-group-item
-            if suggestions.length
+        if suggestions.length
+          ul.list-group
+            li.list-group-item
               p.lead(style="margin-bottom: 0;") Who to follow
               each suggestion in suggestions
                 li.list-group-item
