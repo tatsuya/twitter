@@ -43,18 +43,17 @@ block content
                     span.text-muted= tweet.created_at
                 p.list-group-item-text(style="word-wrap: break-word;")= tweet.text
 
+        include components/pager
+
       .col-md-3
         ul.list-group
           li.list-group-item
             p.lead(style="margin-bottom: 0;") Who to follow
-          li.list-group-item
-            //- a(href="/users/" + tweet.user.name)
-            //-   strong #{tweet.user.fullname}
-            //-   span &nbsp;
-            //-   span.text-muted @#{tweet.user.name}
-          li.list-group-item Morbi leo risus
-          li.list-group-item Porta ac consectetur ac
-          li.list-group-item Vestibulum at eros
-
-        include components/pager
-      .col-md-3
+            each suggestion in suggestions
+              li.list-group-item
+                a(href="/users/" + suggestion.name)
+                  strong #{suggestion.fullname}
+                  span &nbsp;
+                  span.text-muted @#{suggestion.name}
+                form(action="/follow/" + suggestion.name method="post")
+                  button.btn.btn-default.btn-sm(type="submit") Follow

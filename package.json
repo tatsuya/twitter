@@ -22,7 +22,8 @@
     "moment": "^2.10.2",
     "morgan": "~1.5.1",
     "redis": "~0.12.1",
-    "serve-favicon": "~2.2.0"
+    "serve-favicon": "~2.2.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "jshint": "~2.6.3",

@@ -5,6 +5,7 @@ var router = express.Router();
 
 var async = require('async');
 var moment = require('moment');
+var _ = require('underscore');
 
 var validate = require('../lib/middleware/validate');
 var page = require('../lib/middleware/page');
@@ -36,7 +37,8 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
 
     async.parallel({
       followerIds: async.apply(User.getFollowerIds, loginUser.id),
-      followingIds: async.apply(User.getFollowingIds, loginUser.id)
+      followingIds: async.apply(User.getFollowingIds, loginUser.id),
+      users: User.list
     }, function(err, results) {
       if (err) {
         return next(err);
@@ -44,6 +46,10 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
 
       var followerIds = results.followerIds;
       var followingIds = results.followingIds;
+
+      var suggestions = _.shuffle(results.users.filter(function(user) {
+        return user.id !== loginUser.id;
+      }));
 
       var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
         // Pass true to get the value without the suffix.
@@ -58,6 +64,7 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
       res.render('tweets', {
         title: 'Twitter',
         user: res.locals.loginUser,
+        suggestions: suggestions,
         tweets: formattedTweets,
         tweets_count: count,
         followers_count: followerIds.length,
