@@ -29,9 +29,30 @@ block content
 
       .col-md-6
         if !tweets_count
+          ul.list-group
+            li.list-group-item
+              div
+                form(action="/tweets" method="post")
+                  include components/messages.jade
+                  p
+                    textarea.form-control(name="tweet[text]" placeholder="What's happening?" rows="3")
+                  p
+                    button.btn.btn-info.pull-right(type="submit") Tweet
+                    //- .pull-right fails with a button in panel. - https://github.com/twbs/bootstrap/issues/8843
+                    .clearfix
           p.lead You haven't tweeted yet.
         else
           ul.list-group
+            li.list-group-item
+              div
+                form(action="/tweets" method="post")
+                  include components/messages.jade
+                  p
+                    textarea.form-control(name="tweet[text]" placeholder="What's happening?" rows="3")
+                  p
+                    button.btn.btn-info.pull-right(type="submit") Tweet
+                    //- .pull-right fails with a button in panel. - https://github.com/twbs/bootstrap/issues/8843
+                    .clearfix
             each tweet in tweets
               li.list-group-item
                 p.list-group-item-heading
@@ -43,7 +64,24 @@ block content
                     span.text-muted= tweet.created_at
                 p.list-group-item-text(style="word-wrap: break-word;")= tweet.text
 
-        include components/pager
+          include components/pager
+
+        //- if !tweets_count
+        //-   p.lead You haven't tweeted yet.
+        //- else
+        //-   ul.list-group
+        //-     each tweet in tweets
+        //-       li.list-group-item
+        //-         p.list-group-item-heading
+        //-           a(href="/users/" + tweet.user.name)
+        //-             strong #{tweet.user.fullname}
+        //-             span &nbsp;
+        //-             span.text-muted @#{tweet.user.name}
+        //-             span &nbsp;-&nbsp;
+        //-             span.text-muted= tweet.created_at
+        //-         p.list-group-item-text(style="word-wrap: break-word;")= tweet.text
+
+        //- include components/pager
 
       .col-md-3
         if suggestions.length
