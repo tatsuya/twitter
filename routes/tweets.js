@@ -22,16 +22,26 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
   var loginUser = res.locals.loginUser;
   var page = req.page;
   async.parallel({
-    tweets: function(callback) {
-      Tweet.getRange(page.from, page.to, callback);
-    },
-    count: Tweet.count
+    timeline: function(fn) {
+      User.getTimeline(loginUser.id, function(err, ids) {
+        if (err) {
+          return fn(err);
+        }
+        async.map(ids, Tweet.get, fn);
+      });
+    }
+    // tweets: function(callback) {
+    //   Tweet.getRange(page.from, page.to, callback);
+    // },
+    // count: Tweet.count
   }, function(err, results) {
     if (err) {
       return next(err);
     }
-    var tweets = results.tweets;
-    var count = results.count;
+    // var tweets = results.tweets;
+    // var count = results.count;
+    var tweets = results.timeline;
+    var count = tweets.count;
 
     if (req.remoteUser) {
       return res.json(tweets);
@@ -104,15 +114,23 @@ router.post('/',
         return next(err);
       }
 
-      User.addTweet(loginUser.id, tweet.id, date, function(err) {
+      User.getFollowerIds(loginUser.id, function(err, ids) {
         if (err) {
           return next(err);
         }
-        if (req.remoteUser) {
-          res.json({ message: 'Tweet added.' });
-        } else {
-          res.redirect('/');
-        }
+        ids.push(loginUser.id);
+        async.map(ids, function(id, fn) {
+          User.addTweetToTimeline(id, tweet.id, date, fn);
+        }, function(err, results) {
+          if (err) {
+            return next(err);
+          }
+          if (req.remoteUser) {
+            res.json({ message: 'Tweet added.' });
+          } else {
+            res.redirect('/');
+          }
+        });
       });
     });
   }
