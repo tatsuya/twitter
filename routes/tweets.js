@@ -13,6 +13,28 @@ var page = require('../lib/middleware/page');
 var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
 
+function extractUserIds(tweets) {
+  var userIds = [];
+  tweets.forEach(function(tweet) {
+    var userId = tweet.user_id;
+    if (userIds.indexOf(userId) < 0) {
+      userIds.push(userId);
+    }
+  });
+  return userIds;
+}
+
+function createUserIndex(users) {
+  var index = {};
+  users.forEach(function(user) {
+    var userId = user.id;
+    if (!index.hasOwnProperty(userId)) {
+      index[userId] = user;
+    }
+  });
+  return index;
+}
+
 router.get('/', page(Tweet.count, 5), function(req, res, next) {
   if (!res.locals.loginUser) {
     return res.render('index');
@@ -21,66 +43,69 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
 
   var loginUser = res.locals.loginUser;
   var page = req.page;
-  async.parallel({
-    timeline: function(fn) {
-      User.getTimeline(loginUser.id, function(err, ids) {
-        if (err) {
-          return fn(err);
-        }
-        async.map(ids, Tweet.get, fn);
-      });
-    }
-    // tweets: function(callback) {
-    //   Tweet.getRange(page.from, page.to, callback);
-    // },
-    // count: Tweet.count
-  }, function(err, results) {
+
+  User.getTimeline(loginUser.id, function(err, tweetIds) {
     if (err) {
-      return next(err);
-    }
-    // var tweets = results.tweets;
-    // var count = results.count;
-    var tweets = results.timeline;
-    var count = tweets.count;
-
-    if (req.remoteUser) {
-      return res.json(tweets);
+      return fn(err);
     }
 
-    async.parallel({
-      followerIds: async.apply(User.getFollowerIds, loginUser.id),
-      followingIds: async.apply(User.getFollowingIds, loginUser.id),
-      users: User.list
-    }, function(err, results) {
+    async.map(tweetIds, Tweet.get, function(err, tweets) {
       if (err) {
         return next(err);
       }
 
-      var followerIds = results.followerIds;
-      var followingIds = results.followingIds;
+      async.map(extractUserIds(tweets), User.get, function(err, users) {
+        if (err) {
+          return next(err);
+        }
 
-      var suggestions = _.shuffle(results.users.filter(function(user) {
-        return user.id !== loginUser.id;
-      }));
+        var userIndex = createUserIndex(users);
 
-      var formattedTweets = tweets.map(function timeCreatedAtFromNow(tweet) {
-        // Pass true to get the value without the suffix.
-        //
-        // Examples:
-        //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-        //   moment([2007, 0, 29]).fromNow(true); // 4 years
-        tweet.created_at = moment(tweet.created_at).fromNow(true);
-        return tweet;
-      });
+        var formattedTweets = tweets
+          .map(function addUserInfo(tweet) {
+            tweet.user = userIndex[tweet.user_id];
+            return tweet;
+          })
+          .map(function timeCreatedAtFromNow(tweet) {
+            // Pass true to get the value without the suffix.
+            //
+            // Examples:
+            //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+            //   moment([2007, 0, 29]).fromNow(true); // 4 years
+            tweet.created_at = moment(tweet.created_at).fromNow(true);
+            return tweet;
+          });
 
-      res.render('tweets', {
-        title: 'Twitter',
-        user: res.locals.loginUser,
-        suggestions: suggestions,
-        tweets: formattedTweets,
-        tweetsCount: count,
-        followersCount: followerIds.length,
-        followingsCount: followingIds.length
+        if (req.remoteUser) {
+          return res.json(tweets);
+        }
+
+        async.parallel({
+          followerIds: async.apply(User.getFollowerIds, loginUser.id),
+          followingIds: async.apply(User.getFollowingIds, loginUser.id),
+          users: User.list
+        }, function(err, results) {
+          if (err) {
+            return next(err);
+          }
+
+          var followerIds = results.followerIds;
+          var followingIds = results.followingIds;
+
+          var suggestions = _.shuffle(results.users.filter(function(user) {
+            return user.id !== loginUser.id;
+          }));
+
+          res.render('tweets', {
+            title: 'Twitter',
+            user: res.locals.loginUser,
+            suggestions: suggestions,
+            tweets: formattedTweets,
+            tweetsCount: formattedTweets.length,
+            followersCount: followerIds.length,
+            followingsCount: followingIds.length
+          });
+        });
       });
     });
   });
@@ -102,11 +127,7 @@ router.post('/',
     var tweet = new Tweet({
       text: data.text,
       created_at: date.toISOString(),
-      user: {
-        id: loginUser.id,
-        name: loginUser.name,
-        fullname: loginUser.fullname
-      }
+      user_id: loginUser.id
     });
 
     tweet.save(function(err, tweet) {
@@ -114,22 +135,30 @@ router.post('/',
         return next(err);
       }
 
-      User.getFollowerIds(loginUser.id, function(err, ids) {
+      User.addTweet(loginUser.id, tweet.id, date, function(err) {
         if (err) {
           return next(err);
         }
-        ids.push(loginUser.id);
-        async.map(ids, function(id, fn) {
-          User.addTweetToTimeline(id, tweet.id, date, fn);
-        }, function(err, results) {
+
+        User.getFollowerIds(loginUser.id, function(err, followerIds) {
           if (err) {
             return next(err);
           }
-          if (req.remoteUser) {
-            res.json({ message: 'Tweet added.' });
-          } else {
-            res.redirect('/');
-          }
+
+          followerIds.push(loginUser.id);
+          async.map(followerIds, function(followerId, fn) {
+            User.addTweetToTimeline(followerId, tweet.id, date, fn);
+          }, function(err, results) {
+            if (err) {
+              return next(err);
+            }
+
+            if (req.remoteUser) {
+              res.json({ message: 'Tweet added.' });
+            } else {
+              res.redirect('/');
+            }
+          });
         });
       });
     });

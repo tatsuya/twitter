@@ -26,6 +26,28 @@ function isMe() {
   };
 }
 
+function extractUserIds(tweets) {
+  var userIds = [];
+  tweets.forEach(function(tweet) {
+    var userId = tweet.user_id;
+    if (userIds.indexOf(userId) < 0) {
+      userIds.push(userId);
+    }
+  });
+  return userIds;
+}
+
+function createUserIndex(users) {
+  var index = {};
+  users.forEach(function(user) {
+    var userId = user.id;
+    if (!index.hasOwnProperty(userId)) {
+      index[userId] = user;
+    }
+  });
+  return index;
+}
+
 function formatTweets(tweets) {
   return tweets.map(function timeCreatedAtFromNow(tweet) {
     // Pass true to get the value without the suffix.
@@ -69,24 +91,47 @@ router.get('/:name', isMe(), function(req, res, next) {
       var followingIds = results.followingIds;
       var isFollowing = results.isFollowing;
 
-      Tweet.filter(function filterByUsername(tweet) {
-        if (!tweet.user) {
-          return false;
-        }
-        return tweet.user.id === user.id;
-      }, function(err, tweets) {
+      User.listTweets(user.id, function(err, ids) {
         if (err) {
           return next(err);
         }
+        async.map(ids, Tweet.get, function(err, tweets) {
+          if (err) {
+            return next(err);
+          }
 
-        res.render('users', {
-          title: util.format('%s (@%s)', user.fullname, user.name),
-          user: user,
-          tweets: formatTweets(tweets),
-          tweetsCount: tweets.length,
-          followersCount: followerIds.length,
-          followingsCount: followingIds.length,
-          isFollowing: isFollowing
+          async.map(extractUserIds(tweets), User.get, function(err, users) {
+            if (err) {
+              return next(err);
+            }
+
+            var userIndex = createUserIndex(users);
+
+            var formattedTweets = tweets
+              .map(function addUserInfo(tweet) {
+                tweet.user = userIndex[tweet.user_id];
+                return tweet;
+              })
+              .map(function timeCreatedAtFromNow(tweet) {
+                // Pass true to get the value without the suffix.
+                //
+                // Examples:
+                //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+                //   moment([2007, 0, 29]).fromNow(true); // 4 years
+                tweet.created_at = moment(tweet.created_at).fromNow(true);
+                return tweet;
+              });
+
+            res.render('users', {
+              title: util.format('%s (@%s)', user.fullname, user.name),
+              user: user,
+              tweets: formatTweets(tweets),
+              tweetsCount: tweets.length,
+              followersCount: followerIds.length,
+              followingsCount: followingIds.length,
+              isFollowing: isFollowing
+            });
+          });
         });
       });
     });
