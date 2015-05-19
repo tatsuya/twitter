@@ -23,12 +23,30 @@ block content
         //-           a(href='#') Features
         //-         li
         //-           a(href='#') Contact
-        .inner.cover
-          h1.cover-heading Welcom to Twitter.
-          p.lead
-            | Connect with your friends — and other fascinating people. Get in-the-moment updates on the things that interest you. And watch events unfold, in real time, from every angle.
-          p.lead
-            a.btn.btn-lg.btn-default(href='/login') Log in
+
+        .row
+          .col-md-6
+            h1.cover-heading Welcom to Twitter.
+            p.lead
+              | Connect with your friends — and other fascinating people. Get in-the-moment updates on the things that interest you. And watch events unfold, in real time, from every angle.
+          .col-md-6
+            .panel.panel-default(style="margin-top: 30px;")
+              .panel-body
+                form(action="/login" method="post")
+                  p
+                    input.form-control(type="text" name="user[name]" placeholder="Username")
+                  p
+                    input.form-control(type="password" name="user[pass]" placeholder="Password")
+                  p
+                    input.btn.btn-info.pull-right(type="submit" value="Login")
+
+        //- .inner.cover
+        //-   h1.cover-heading Welcom to Twitter.
+        //-   p.lead
+        //-     | Connect with your friends — and other fascinating people. Get in-the-moment updates on the things that interest you. And watch events unfold, in real time, from every angle.
+        //-   p.lead
+        //-     a.btn.btn-lg.btn-default(href='/login') Log in
+
         //- .mastfoot
         //-   .inner
         //-     p
