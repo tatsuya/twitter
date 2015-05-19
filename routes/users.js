@@ -91,7 +91,7 @@ router.get('/:name', isMe(), function(req, res, next) {
       var followingIds = results.followingIds;
       var isFollowing = results.isFollowing;
 
-      User.listTweets(user.id, function(err, ids) {
+      User.listTweets(user.id, function(err, tweets) {
         if (err) {
           return next(err);
         }

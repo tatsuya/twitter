@@ -83,7 +83,7 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
         async.parallel({
           followerIds: async.apply(User.getFollowerIds, loginUser.id),
           followingIds: async.apply(User.getFollowingIds, loginUser.id),
-          users: User.list
+          suggestions: async.apply(User.getSuggestions, loginUser.id)
         }, function(err, results) {
           if (err) {
             return next(err);
@@ -92,14 +92,10 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
           var followerIds = results.followerIds;
           var followingIds = results.followingIds;
 
-          var suggestions = _.shuffle(results.users.filter(function(user) {
-            return user.id !== loginUser.id;
-          }));
-
           res.render('tweets', {
             title: 'Twitter',
             user: res.locals.loginUser,
-            suggestions: suggestions,
+            suggestions: results.suggestions,
             tweets: formattedTweets,
             tweetsCount: formattedTweets.length,
             followersCount: followerIds.length,
