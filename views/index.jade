@@ -33,9 +33,7 @@ block content
                 .panel-body
                   form(action="/login" method="post")
 
-                    if messages
-                      each message in messages
-                        p.text-gray-dark(class=message.type)= message.text
+                    include components/messages
 
                     p
                       input.form-control(type="text" name="user[name]" placeholder="Username")
