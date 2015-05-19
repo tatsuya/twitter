@@ -7,9 +7,6 @@ block styles
 block content
   include components/menu
 
-  //- h1= title
-  //- p Welcome to #{title}
-
   .site-wrapper
     .site-wrapper-inner
       .cover-container
@@ -35,24 +32,19 @@ block content
               .panel.panel-default(style="margin-top: 30px;")
                 .panel-body
                   form(action="/login" method="post")
+
+                    if messages
+                      each message in messages
+                        p.text-gray-dark(class=message.type)= message.text
+
                     p
                       input.form-control(type="text" name="user[name]" placeholder="Username")
                     p
                       input.form-control(type="password" name="user[pass]" placeholder="Password")
                     p
                       input.btn.btn-info.pull-right(type="submit" value="Login")
-              .panel.panel-default
-                .panel-body
-                  form.signup(action="/register" method="post")
-                    h4.text-gray-dark.pull-left New to Twitter?
-                    p
-                      input.form-control(type="text" name="user[fullname]" placeholder="Full name")
-                    p
-                      input.form-control(type="text" name="user[name]" placeholder="Username")
-                    p
-                      input.form-control(type="password" name="user[pass]" placeholder="Password")
-                    p
-                      input.btn.btn-info.pull-right(type="submit" value="Sign Up")
+                    p.text-gray-dark.pull-left New to Twitter? 
+                      a(href="/register" style="color: #337ab7;") Sign up now »
 
         .mastfoot
           .inner

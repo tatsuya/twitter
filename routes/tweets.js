@@ -36,10 +36,11 @@ function createUserIndex(users) {
 }
 
 router.get('/', page(Tweet.count, 5), function(req, res, next) {
+  req.flash();
+
   if (!res.locals.loginUser) {
     return res.render('index');
   }
-  req.flash();
 
   var loginUser = res.locals.loginUser;
   var page = req.page;
