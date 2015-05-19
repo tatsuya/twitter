@@ -36,10 +36,8 @@ function createUserIndex(users) {
 }
 
 router.get('/', page(Tweet.count, 5), function(req, res, next) {
-  req.flash();
-
   if (!res.locals.loginUser) {
-    return res.render('index');
+    return res.redirect('/login');
   }
 
   var loginUser = res.locals.loginUser;
