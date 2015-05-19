@@ -1,0 +1,26 @@
+extends layout
+
+block styles
+  link(rel="stylesheet", href="/css/style.css")
+
+block content
+  include components/menu
+
+  .container(style="margin-top: 15px; margin-bottom: 15px;")
+    .row
+      .col-md-6.col-md-offset-3
+        ul.list-group
+          li.list-group-item
+            p.lead.text-muted(style="margin-bottom: 0;") Who to follow
+            p.text-muted Follow more people from the suggestions below.
+            each suggestion in suggestions
+              li.list-group-item
+                .row
+                  .col-sm-10
+                    a.text-gray-dark(href="/users/" + suggestion.name)
+                      strong #{suggestion.fullname}
+                      span &nbsp;
+                      span.text-muted @#{suggestion.name}
+                  .col-sm-2
+                    form(action="/follow/" + suggestion.name method="post")
+                      button.btn.btn-default.btn-sm(type="submit") Follow

@@ -50,11 +50,12 @@ block content
           ul.list-group
             li.list-group-item
               p.lead(style="margin-bottom: 0;") Who to follow
+              a(href="/suggestions") View all
               each suggestion in suggestions
                 li.list-group-item
-                  a(href="/users/" + suggestion.name)
+                  a.text-gray-dark(href="/users/" + suggestion.name)
                     strong #{suggestion.fullname}
                     span &nbsp;
                     span.text-muted @#{suggestion.name}
-                  form(action="/follow/" + suggestion.name method="post")
+                  form(action="/follow/" + suggestion.name method="post" style="margin: 5px 0;")
                     button.btn.btn-default.btn-sm(type="submit") Follow
