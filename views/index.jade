@@ -1,6 +1,7 @@
 extends layout
 
 block styles
+  link(rel='stylesheet', href='/css/style.css')
   link(rel='stylesheet', href='/css/cover.css')
 
 block content
@@ -40,19 +41,24 @@ block content
                       input.form-control(type="password" name="user[pass]" placeholder="Password")
                     p
                       input.btn.btn-info.pull-right(type="submit" value="Login")
+              .panel.panel-default
+                .panel-body
+                  form.signup(action="/register" method="post")
+                    h4.text-gray-dark.pull-left New to Twitter?
+                    p
+                      input.form-control(type="text" name="user[fullname]" placeholder="Full name")
+                    p
+                      input.form-control(type="text" name="user[name]" placeholder="Username")
+                    p
+                      input.form-control(type="password" name="user[pass]" placeholder="Password")
+                    p
+                      input.btn.btn-info.pull-right(type="submit" value="Sign Up")
 
-        //- .inner.cover
-        //-   h1.cover-heading Welcom to Twitter.
-        //-   p.lead
-        //-     | Connect with your friends — and other fascinating people. Get in-the-moment updates on the things that interest you. And watch events unfold, in real time, from every angle.
-        //-   p.lead
-        //-     a.btn.btn-lg.btn-default(href='/login') Log in
-
-        //- .mastfoot
-        //-   .inner
-        //-     p
-        //-       | Cover template for 
-        //-       a(href='http://getbootstrap.com') Bootstrap
-        //-       | , by 
-        //-       a(href='https://twitter.com/mdo') @mdo
-        //-       | .
+        .mastfoot
+          .inner
+            p
+              | This application is a very simple Twitter clone written in Node and Redis, created by 
+              a(href='https://github.com/tatsuyaoiw') @tatsuyaoiw
+              | . Code is available at 
+              a(href='https://github.com/tatsuyaoiw/twitter') Github
+              | .
