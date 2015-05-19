@@ -145,7 +145,7 @@ body {
   }
   /* Start the vertical centering */
   .site-wrapper-inner {
-    vertical-align: middle;
+    /*vertical-align: middle;*/
   }
   /* Handle the widths */
   .masthead,
