@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 
+var validate = require('../lib/middleware/validate');
 var User = require('../lib/model/user');
 
 router.get('/', function(req, res) {
@@ -16,61 +17,61 @@ router.get('/', function(req, res) {
   });
 });
 
-router.post('/', function(req, res, next) {
-  var user = req.loginUser;
-  var data = req.body.user;
+router.post('/',
+  // Validate username
+  validate.required('user[name]'),
+  validate.lengthLessThanOrEqualTo('user[name]', 15),
+  validate.username('user[name]'),
+  // Validate fullname
+  validate.required('user[fullname]'),
+  validate.lengthLessThanOrEqualTo('user[fullname]', 20),
+  function(req, res, next) {
+    var user = req.loginUser;
+    var data = req.body.user;
 
-  if (!data.name) {
-    req.flash('error', 'Username can\'t be blank');
-    return res.redirect('back');
-  }
-  if (!data.fullname) {
-    req.flash('error', 'Full name can\'t be blank');
-    return res.redirect('back');
-  }
-
-  if (user.name !== data.name) {
-    // If username is changed make sure new username is not already taken.
-    User.getByName(data.name, function(err, existingUser) {
-      if (err) {
-        return next(err);
-      }
-      if (existingUser.id) {
-        req.flash('error', 'Username already taken!');
-        return res.redirect('back');
-      }
-
-      // Delete old ID index
-      User.deleteId(user.name, function(err) {
+    if (user.name !== data.name) {
+      // If username is changed make sure new username is not already taken.
+      User.getByName(data.name, function(err, existingUser) {
         if (err) {
           return next(err);
         }
+        if (existingUser.id) {
+          req.flash('error', 'Username already taken!');
+          return res.redirect('back');
+        }
 
-        user.name = data.name;
-        user.fullname = data.fullname;
-
-        user.save(function(err) {
+        // Delete old ID index
+        User.deleteId(user.name, function(err) {
           if (err) {
             return next(err);
           }
-          req.flash('info', 'Thanks, your settings have been saved.');
-          res.redirect('back');
+
+          user.name = data.name;
+          user.fullname = data.fullname;
+
+          user.save(function(err) {
+            if (err) {
+              return next(err);
+            }
+            req.flash('info', 'Thanks, your settings have been saved.');
+            res.redirect('back');
+          });
         });
       });
-    });
-  } else {
-    // Otherwise, update user's full name.
-    user.fullname = data.fullname;
+    } else {
+      // Otherwise, update user's full name.
+      user.fullname = data.fullname;
 
-    user.save(function(err) {
-      if (err) {
-        return next(err);
-      }
-      req.flash('info', 'Thanks, your settings have been saved.');
-      res.redirect('back');
-    });
+      user.save(function(err) {
+        if (err) {
+          return next(err);
+        }
+        req.flash('info', 'Thanks, your settings have been saved.');
+        res.redirect('back');
+      });
+    }
   }
-});
+);
 
 router.get('/deactivate', function(req, res) {
   if (!res.locals.loginUser) {

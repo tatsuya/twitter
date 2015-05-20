@@ -12,9 +12,15 @@ router.get('/', function(req, res) {
 });
 
 router.post('/',
+  // Validate username
   validate.required('user[name]'),
   validate.lengthLessThanOrEqualTo('user[name]', 15),
+  validate.username('user[name]'),
+  // Validate password
   validate.required('user[pass]'),
+  validate.lengthMoreThanOrEqualTo('user[pass]', 6),
+  validate.lengthLessThanOrEqualTo('user[pass]', 1024),
+  // Validate fullname
   validate.required('user[fullname]'),
   validate.lengthLessThanOrEqualTo('user[fullname]', 20),
   function(req, res, next) {
