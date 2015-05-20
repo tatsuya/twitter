@@ -5,7 +5,6 @@ var router = express.Router();
 
 var async = require('async');
 var moment = require('moment');
-var _ = require('underscore');
 
 var validate = require('../lib/middleware/validate');
 var page = require('../lib/middleware/page');
@@ -45,7 +44,7 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
 
   User.getTimeline(loginUser.id, function(err, tweetIds) {
     if (err) {
-      return fn(err);
+      return next(err);
     }
 
     async.map(tweetIds, Tweet.get, function(err, tweets) {
@@ -110,11 +109,11 @@ router.post('/',
   validate.required('tweet[text]'),
   validate.lengthLessThanOrEqualTo('tweet[text]', 140),
   function(req, res, next) {
-    if (!res.locals.loginUser) {
+    var loginUser = res.locals.loginUser;
+    if (!loginUser) {
       return res.redirect('login');
     }
 
-    var loginUser = res.locals.loginUser;
     var data = req.body.tweet;
 
     var date = new Date();
@@ -141,9 +140,9 @@ router.post('/',
           }
 
           followerIds.push(loginUser.id);
-          async.map(followerIds, function(followerId, fn) {
+          async.each(followerIds, function(followerId, fn) {
             User.addTweetToTimeline(followerId, tweet.id, date, fn);
-          }, function(err, results) {
+          }, function(err) {
             if (err) {
               return next(err);
             }
