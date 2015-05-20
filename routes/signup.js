@@ -8,7 +8,7 @@ var User = require('../lib/model/user');
 
 router.get('/', function(req, res) {
   req.flash();
-  res.render('register', { title: 'Register' });
+  res.render('signup', { title: 'Sign up for Twitter' });
 });
 
 router.post('/',

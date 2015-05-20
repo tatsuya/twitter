@@ -15,7 +15,7 @@ var user = require('./lib/middleware/user');
 var User = require('./lib/model/user');
 
 var routes = require('./routes/index');
-var register = require('./routes/register');
+var signup = require('./routes/signup');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
 var tweets = require('./routes/tweets');
@@ -49,7 +49,7 @@ app.use('/api', auth(User.authenticate, 'shoutbox'));
 app.use(user());
 
 app.use('/api', api);
-app.use('/register', register);
+app.use('/signup', signup);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/post', post);
