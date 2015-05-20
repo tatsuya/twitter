@@ -7,7 +7,7 @@ var User = require('../lib/model/user');
 
 router.get('/', function(req, res) {
   req.flash();
-  res.render('login', { title: 'Login' });
+  res.render('login', { title: 'Login to Twitter' });
 });
 
 router.post('/', function(req, res, next) {
