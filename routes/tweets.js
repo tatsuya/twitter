@@ -79,8 +79,8 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
         }
 
         async.parallel({
-          followerIds: async.apply(User.getFollowerIds, loginUser.id),
-          followingIds: async.apply(User.getFollowingIds, loginUser.id),
+          followerIds: async.apply(User.listFollowerIds, loginUser.id),
+          followingIds: async.apply(User.listFollowingIds, loginUser.id),
           suggestions: async.apply(User.getSuggestions, loginUser.id)
         }, function(err, results) {
           if (err) {
@@ -134,7 +134,7 @@ router.post('/',
           return next(err);
         }
 
-        User.getFollowerIds(loginUser.id, function(err, followerIds) {
+        User.listFollowerIds(loginUser.id, function(err, followerIds) {
           if (err) {
             return next(err);
           }

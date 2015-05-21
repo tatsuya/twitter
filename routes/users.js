@@ -4,7 +4,6 @@ var express = require('express');
 var router = express.Router();
 
 var User = require('../lib/model/user');
-var Tweet = require('../lib/model/tweet');
 
 var util = require('util');
 var async = require('async');
@@ -48,18 +47,6 @@ function createUserIndex(users) {
   return index;
 }
 
-function formatTweets(tweets) {
-  return tweets.map(function timeCreatedAtFromNow(tweet) {
-    // Pass true to get the value without the suffix.
-    //
-    // Examples:
-    //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-    //   moment([2007, 0, 29]).fromNow(true); // 4 years
-    tweet.created_at = moment(tweet.created_at).fromNow(true);
-    return tweet;
-  });
-}
-
 router.get('/:name', isMe(), function(req, res, next) {
   var loginUser = res.locals.loginUser;
   var name = req.params.name;
@@ -70,10 +57,10 @@ router.get('/:name', isMe(), function(req, res, next) {
     }
     async.parallel({
       followerIds: function(fn) {
-        User.getFollowerIds(user.id, fn);
+        User.listFollowerIds(user.id, fn);
       },
       followingIds: function(fn) {
-        User.getFollowingIds(user.id, fn);
+        User.listFollowingIds(user.id, fn);
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
@@ -142,10 +129,10 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
     }
     async.parallel({
       followers: function(fn) {
-        User.getFollowers(user.id, fn);
+        User.listFollowers(user.id, fn);
       },
       followingIds: function(fn) {
-        User.getFollowingIds(user.id, fn);
+        User.listFollowingIds(user.id, fn);
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
@@ -190,10 +177,10 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
     }
     async.parallel({
       followerIds: function(fn) {
-        User.getFollowerIds(user.id, fn);
+        User.listFollowerIds(user.id, fn);
       },
       followings: function(fn) {
-        User.getFollowings(user.id, fn);
+        User.listFollowings(user.id, fn);
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
@@ -216,7 +203,7 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
         user: user,
         followersCount: results.followerIds.length,
         followings: results.followings,
-        followingsCount: followings.length,
+        followingsCount: results.followings.length,
         isFollowing: results.isFollowing,
         tweetsCount: results.tweets.length
       });
