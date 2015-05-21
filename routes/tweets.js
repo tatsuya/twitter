@@ -48,13 +48,16 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
     },
     userTweetIds: function (fn) {
       User.listTweets(loginUser.id, fn);
-    }
-  }, function(err, results1) {
+    },
+    followerIds: async.apply(User.listFollowerIds, loginUser.id),
+    followingIds: async.apply(User.listFollowingIds, loginUser.id),
+    suggestions: async.apply(User.getSuggestions, loginUser.id)
+  }, function(err, results) {
     if (err) {
       return next(err);
     }
 
-    async.map(results1.timelineTweetIds, Tweet.get, function(err, tweets) {
+    async.map(results.timelineTweetIds, Tweet.get, function(err, tweets) {
       if (err) {
         return next(err);
       }
@@ -85,24 +88,14 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
           return res.json(tweets);
         }
 
-        async.parallel({
-          followerIds: async.apply(User.listFollowerIds, loginUser.id),
-          followingIds: async.apply(User.listFollowingIds, loginUser.id),
-          suggestions: async.apply(User.getSuggestions, loginUser.id)
-        }, function(err, results2) {
-          if (err) {
-            return next(err);
-          }
-
-          res.render('tweets', {
-            title: 'Twitter',
-            user: res.locals.loginUser,
-            suggestions: results2.suggestions,
-            tweets: formattedTweets,
-            tweetsCount: results1.userTweetIds.length,
-            followersCount: results2.followerIds.length,
-            followingsCount: results2.followingIds.length
-          });
+        res.render('tweets', {
+          title: 'Twitter',
+          user: res.locals.loginUser,
+          suggestions: results.suggestions,
+          tweets: formattedTweets,
+          tweetsCount: results.userTweetIds.length,
+          followersCount: results.followerIds.length,
+          followingsCount: results.followingIds.length
         });
       });
     });
