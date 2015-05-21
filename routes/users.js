@@ -68,51 +68,48 @@ router.get('/:name', isMe(), function(req, res, next) {
           return fn(null, false);
         }
         User.isFollowing(user.id, loginUser.id, fn);
+      },
+      tweets: function(fn) {
+        User.listTweets(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
         return next(err);
       }
 
-      var followerIds = results.followerIds;
-      var followingIds = results.followingIds;
-      var isFollowing = results.isFollowing;
+      var tweets = results.tweets;
+      var userIds = extractUserIds(tweets);
 
-      User.listTweets(user.id, function(err, tweets) {
+      async.map(userIds, User.get, function(err, users) {
         if (err) {
           return next(err);
         }
-        async.map(extractUserIds(tweets), User.get, function(err, users) {
-          if (err) {
-            return next(err);
-          }
 
-          var userIndex = createUserIndex(users);
+        var userIndex = createUserIndex(users);
 
-          var formattedTweets = tweets
-            .map(function addUserInfo(tweet) {
-              tweet.user = userIndex[tweet.user_id];
-              return tweet;
-            })
-            .map(function timeCreatedAtFromNow(tweet) {
-              // Pass true to get the value without the suffix.
-              //
-              // Examples:
-              //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-              //   moment([2007, 0, 29]).fromNow(true); // 4 years
-              tweet.created_at = moment(tweet.created_at).fromNow(true);
-              return tweet;
-            });
-
-          res.render('users', {
-            title: util.format('%s (@%s)', user.fullname, user.name),
-            user: user,
-            tweets: formattedTweets,
-            tweetsCount: tweets.length,
-            followersCount: followerIds.length,
-            followingsCount: followingIds.length,
-            isFollowing: isFollowing
+        var formattedTweets = tweets
+          .map(function addUserInfo(tweet) {
+            tweet.user = userIndex[tweet.user_id];
+            return tweet;
+          })
+          .map(function timeCreatedAtFromNow(tweet) {
+            // Pass true to get the value without the suffix.
+            //
+            // Examples:
+            //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+            //   moment([2007, 0, 29]).fromNow(true); // 4 years
+            tweet.created_at = moment(tweet.created_at).fromNow(true);
+            return tweet;
           });
+
+        res.render('users', {
+          title: util.format('%s (@%s)', user.fullname, user.name),
+          user: user,
+          tweets: formattedTweets,
+          tweetsCount: tweets.length,
+          followersCount: results.followerIds.length,
+          followingsCount: results.followingIds.length,
+          isFollowing: results.isFollowing
         });
       });
     });

@@ -42,12 +42,19 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
   var loginUser = res.locals.loginUser;
   var page = req.page;
 
-  User.getTimeline(loginUser.id, function(err, tweetIds) {
+  async.parallel({
+    timelineTweetIds: function(fn) {
+      User.getTimeline(loginUser.id, fn);
+    },
+    userTweetIds: function (fn) {
+      User.listTweets(loginUser.id, fn);
+    }
+  }, function(err, results1) {
     if (err) {
       return next(err);
     }
 
-    async.map(tweetIds, Tweet.get, function(err, tweets) {
+    async.map(results1.timelineTweetIds, Tweet.get, function(err, tweets) {
       if (err) {
         return next(err);
       }
@@ -82,26 +89,24 @@ router.get('/', page(Tweet.count, 5), function(req, res, next) {
           followerIds: async.apply(User.listFollowerIds, loginUser.id),
           followingIds: async.apply(User.listFollowingIds, loginUser.id),
           suggestions: async.apply(User.getSuggestions, loginUser.id)
-        }, function(err, results) {
+        }, function(err, results2) {
           if (err) {
             return next(err);
           }
 
-          var followerIds = results.followerIds;
-          var followingIds = results.followingIds;
-
           res.render('tweets', {
             title: 'Twitter',
             user: res.locals.loginUser,
-            suggestions: results.suggestions,
+            suggestions: results2.suggestions,
             tweets: formattedTweets,
-            tweetsCount: formattedTweets.length,
-            followersCount: followerIds.length,
-            followingsCount: followingIds.length
+            tweetsCount: results1.userTweetIds.length,
+            followersCount: results2.followerIds.length,
+            followingsCount: results2.followingIds.length
           });
         });
       });
     });
+
   });
 });
 
