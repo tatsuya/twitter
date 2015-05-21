@@ -120,7 +120,7 @@ router.get('/:name', isMe(), function(req, res, next) {
           res.render('users', {
             title: util.format('%s (@%s)', user.fullname, user.name),
             user: user,
-            tweets: formatTweets(tweets),
+            tweets: formattedTweets,
             tweetsCount: tweets.length,
             followersCount: followerIds.length,
             followingsCount: followingIds.length,
@@ -153,6 +153,9 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
           return fn(null, false);
         }
         User.isFollowing(user.id, loginUser.id, fn);
+      },
+      tweets: function(fn) {
+        User.listTweets(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
@@ -163,27 +166,15 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
       var followingIds = results.followingIds;
       var isFollowing = results.isFollowing;
 
-      Tweet.filter(function filterByUsername(tweet) {
-        if (!tweet.user) {
-          return false;
-        }
-        return tweet.user.id === user.id;
-      }, function(err, tweets) {
-        if (err) {
-          return next(err);
-        }
-
-        res.render('followers', {
-          title: util.format('People following %s', user.fullname),
-          view: 'followers',
-          user: user,
-          tweets: formatTweets(tweets),
-          tweetsCount: tweets.length,
-          followers: followers,
-          followersCount: followers.length,
-          followingsCount: followingIds.length,
-          isFollowing: isFollowing
-        });
+      res.render('followers', {
+        title: util.format('People following %s', user.fullname),
+        view: 'followers',
+        user: user,
+        followers: followers,
+        followersCount: followers.length,
+        followingsCount: followingIds.length,
+        isFollowing: isFollowing,
+        tweetsCount: results.tweets.length
       });
     });
   });
@@ -210,37 +201,24 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
           return fn(null, false);
         }
         User.isFollowing(user.id, loginUser.id, fn);
+      },
+      tweets: function(fn) {
+        User.listTweets(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
         return next(err);
       }
 
-      var followerIds = results.followerIds;
-      var followings = results.followings;
-      var isFollowing = results.isFollowing;
-
-      Tweet.filter(function filterByUsername(tweet) {
-        if (!tweet.user) {
-          return false;
-        }
-        return tweet.user.id === user.id;
-      }, function(err, tweets) {
-        if (err) {
-          return next(err);
-        }
-
-        res.render('followings', {
-          title: util.format('People followed by %s', user.fullname),
-          view: 'followings',
-          user: user,
-          followersCount: followerIds.length,
-          followings: followings,
-          followingsCount: followings.length,
-          isFollowing: isFollowing,
-          tweets: formatTweets(tweets),
-          tweetsCount: tweets.length
-        });
+      res.render('followings', {
+        title: util.format('People followed by %s', user.fullname),
+        view: 'followings',
+        user: user,
+        followersCount: results.followerIds.length,
+        followings: results.followings,
+        followingsCount: followings.length,
+        isFollowing: results.isFollowing,
+        tweetsCount: results.tweets.length
       });
     });
   });
