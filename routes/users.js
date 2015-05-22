@@ -6,6 +6,8 @@ var router = express.Router();
 var User = require('../lib/model/user');
 var Tweet = require('../lib/model/tweet');
 
+var stats = require('../lib/helper/stats');
+
 var util = require('util');
 var async = require('async');
 var moment = require('moment');
@@ -57,11 +59,8 @@ router.get('/:name', isMe(), function(req, res, next) {
       return next(err);
     }
     async.parallel({
-      followerIds: function(fn) {
-        User.listFollowerIds(user.id, fn);
-      },
-      followingIds: function(fn) {
-        User.listFollowingIds(user.id, fn);
+      stats: function(fn) {
+        stats(user.id, fn);
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
@@ -107,9 +106,9 @@ router.get('/:name', isMe(), function(req, res, next) {
           title: util.format('%s (@%s)', user.fullname, user.name),
           user: user,
           tweets: formattedTweets,
-          tweetsCount: tweets.length,
-          followersCount: results.followerIds.length,
-          followingsCount: results.followingIds.length,
+          tweetsCount: results.stats.tweets,
+          followersCount: results.stats.followers,
+          followingsCount: results.stats.followings,
           isFollowing: results.isFollowing
         });
       });
@@ -129,9 +128,6 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
       followers: function(fn) {
         User.listFollowers(user.id, fn);
       },
-      followingIds: function(fn) {
-        User.listFollowingIds(user.id, fn);
-      },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
         if (!loginUser) {
@@ -139,27 +135,23 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
         }
         User.isFollowing(user.id, loginUser.id, fn);
       },
-      tweets: function(fn) {
-        Tweet.getUserTimeline(user.id, fn);
+      stats: function(fn) {
+        stats(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
         return next(err);
       }
 
-      var followers = results.followers;
-      var followingIds = results.followingIds;
-      var isFollowing = results.isFollowing;
-
       res.render('followers', {
         title: util.format('People following %s', user.fullname),
         view: 'followers',
         user: user,
-        followers: followers,
-        followersCount: followers.length,
-        followingsCount: followingIds.length,
-        isFollowing: isFollowing,
-        tweetsCount: results.tweets.length
+        followers: results.followers,
+        tweetsCount: results.stats.tweets,
+        followersCount: results.stats.followers,
+        followingsCount: results.stats.followings,
+        isFollowing: results.isFollowing
       });
     });
   });
@@ -174,9 +166,6 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
       return next(err);
     }
     async.parallel({
-      followerIds: function(fn) {
-        User.listFollowerIds(user.id, fn);
-      },
       followings: function(fn) {
         User.listFollowings(user.id, fn);
       },
@@ -187,8 +176,8 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
         }
         User.isFollowing(user.id, loginUser.id, fn);
       },
-      tweets: function(fn) {
-        Tweet.getUserTimeline(user.id, fn);
+      stats: function(fn) {
+        stats(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
@@ -199,11 +188,11 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
         title: util.format('People followed by %s', user.fullname),
         view: 'followings',
         user: user,
-        followersCount: results.followerIds.length,
         followings: results.followings,
-        followingsCount: results.followings.length,
-        isFollowing: results.isFollowing,
-        tweetsCount: results.tweets.length
+        tweetsCount: results.stats.tweets,
+        followersCount: results.stats.followers,
+        followingsCount: results.stats.followings,
+        isFollowing: results.isFollowing
       });
     });
   });

@@ -11,6 +11,7 @@ var page = require('../lib/middleware/page');
 
 var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
+var stats = require('../lib/helper/stats');
 
 function extractUserIds(tweets) {
   var userIds = [];
@@ -43,9 +44,9 @@ router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
   var page = req.page;
 
   async.parallel({
-    tweetsCount: async.apply(Tweet.countUserTimeline, loginUser.id),
-    followersCount: async.apply(User.countFollowers, loginUser.id),
-    followingsCount: async.apply(User.countFollowings, loginUser.id),
+    stats: function(fn) {
+      stats(loginUser.id, fn);
+    },
     formattedTweets: function(fn) {
       Tweet.getHomeTimeline(loginUser.id, function(err, tweets) {
         if (err) {
@@ -90,9 +91,9 @@ router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
     res.render('tweets', {
       title: 'Twitter',
       user: loginUser,
-      tweetsCount: results.tweetsCount,
-      followersCount: results.followersCount,
-      followingsCount: results.followingsCount,
+      tweetsCount: results.stats.tweets,
+      followersCount: results.stats.followers,
+      followingsCount: results.stats.followings,
       tweets: results.formattedTweets,
       suggestions: results.suggestions
     });
