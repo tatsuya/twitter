@@ -42,8 +42,6 @@ router.get('/', page(User.getTweetCountInTimeline, 5), function(req, res, next) 
   var loginUser = res.locals.loginUser;
   var page = req.page;
 
-  console.log(page);
-
   async.parallel({
     timelineTweetIds: function(fn) {
       User.getTimeline(loginUser.id, fn);
@@ -70,6 +68,8 @@ router.get('/', page(User.getTweetCountInTimeline, 5), function(req, res, next) 
         }
 
         var userIndex = createUserIndex(users);
+
+        console.log(tweets);
 
         var formattedTweets = tweets
           .map(function addUserInfo(tweet) {
@@ -120,7 +120,7 @@ router.post('/',
 
     var tweet = new Tweet({
       text: data.text,
-      created_at: date.toISOString(),
+      created_at: date.getTime(),
       user_id: loginUser.id
     });
 
@@ -160,7 +160,8 @@ router.post('/',
 );
 
 router.post('/:id', function(req, res, next) {
-  if (!res.locals.loginUser) {
+  var loginUser = res.locals.loginUser;
+  if (!loginUser) {
     return res.redirect('/login');
   }
 
@@ -168,23 +169,40 @@ router.post('/:id', function(req, res, next) {
     console.log('Unsupported HTTP method: ' + req.body._method);
     return res.redirect('/login');
   }
-  var id = parseInt(req.params.id, 10);
 
-  Tweet.filter(function filterById(tweet) {
-    return tweet.id === id;
-  }, function(err, tweets) {
+  var tweetId = req.params.id;
+
+  Tweet.removeFromGlobalTimeline(tweetId, function(err) {
     if (err) {
       return next(err);
     }
 
-    async.each(tweets, function(obj, fn) {
-      var tweet = new Tweet(obj);
-      tweet.delete(fn);
-    }, function(err) {
+    Tweet.delete(tweetId, function(err) {
       if (err) {
         return next(err);
       }
-      res.redirect('/');
+
+      User.removeTweet(loginUser.id, tweetId, function(err) {
+        if (err) {
+          return next(err);
+        }
+
+        User.listFollowerIds(loginUser.id, function(err, followerIds) {
+          if (err) {
+            return next(err);
+          }
+
+          followerIds.push(loginUser.id);
+          async.each(followerIds, function(followerId, fn) {
+            User.removeTweetFromTimeline(followerId, tweetId, fn);
+          }, function(err) {
+            if (err) {
+              return next(err);
+            }
+            res.redirect('/');
+          });
+        });
+      });
     });
   });
 });
