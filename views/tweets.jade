@@ -19,16 +19,16 @@ block content
             .list-group-item
               p.list-group-item-text.text-muted TWEETS
               h4.list-group-item-heading
-                a(href="/users/" + user.name) #{tweetsCount}
+                a(href="/users/" + user.name) #{stats.tweets}
               p.list-group-item-text.text-muted FOLLOWINGS
               h4.list-group-item-heading
-                a(href="/users/" + user.name + "/followings") #{followingsCount}
+                a(href="/users/" + user.name + "/followings") #{stats.followings}
               p.list-group-item-text.text-muted FOLLOWERS
               h4.list-group-item-heading
-                a(href="/users/" + user.name + "/followers") #{followersCount}
+                a(href="/users/" + user.name + "/followers") #{stats.followers}
 
       .col-md-6
-        if !tweetsCount
+        if !stats.tweets
           ul.list-group
             li.list-group-item
               include components/form-post

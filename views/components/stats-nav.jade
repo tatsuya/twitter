@@ -10,16 +10,16 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
         ul.nav.navbar-nav
           li(class=view || "active")
             a(href="/users/" + user.name)
-              small.text-muted.profile-nav-label TWEETS
-              strong #{tweetsCount}
+              small.text-muted.stats-nav-label TWEETS
+              strong #{stats.tweets}
           li(class=view === "followings" ? "active" : undefined)
             a(href="/users/" + user.name + "/followings")
-              small.text-muted.profile-nav-label FOLLOWING
-              strong #{followingsCount}
+              small.text-muted.stats-nav-label FOLLOWING
+              strong #{stats.followings}
           li(class=view === "followers" ? "active" : undefined)
             a(href="/users/" + user.name + "/followers")
-              small.text-muted.profile-nav-label FOLLOWERS
-              strong #{followersCount}
+              small.text-muted.stats-nav-label FOLLOWERS
+              strong #{stats.followers}
       .col-md-3
         ul.nav.navbar-nav.navbar-right
           li

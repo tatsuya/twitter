@@ -6,6 +6,8 @@ var router = express.Router();
 var async = require('async');
 var Tweet = require('../lib/model/tweet');
 
+var stats = require('../lib/helper/stats');
+
 router.get('/', function(req, res, next) {
   if (!req.loginUser) {
     req.flash();
@@ -17,11 +19,11 @@ router.get('/', function(req, res, next) {
   var user = req.loginUser;
 
   async.parallel({
+    stats: function (fn) {
+      stats(user.id, fn)
+    },
     tweets: function(fn) {
       Tweet.getHomeTimeline(user.id, fn);
-    },
-    tweetsCount: function(fn) {
-      Tweet.countUserTimeline(user.id, fn);
     }
   }, function(err, results) {
     if (err) {

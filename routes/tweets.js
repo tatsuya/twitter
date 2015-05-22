@@ -11,6 +11,7 @@ var page = require('../lib/middleware/page');
 
 var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
+
 var stats = require('../lib/helper/stats');
 
 function extractUserIds(tweets) {
@@ -91,9 +92,7 @@ router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
     res.render('tweets', {
       title: 'Twitter',
       user: loginUser,
-      tweetsCount: results.stats.tweets,
-      followersCount: results.stats.followers,
-      followingsCount: results.stats.followings,
+      stats: results.stats,
       tweets: results.formattedTweets,
       suggestions: results.suggestions
     });

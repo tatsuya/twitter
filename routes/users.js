@@ -106,9 +106,7 @@ router.get('/:name', isMe(), function(req, res, next) {
           title: util.format('%s (@%s)', user.fullname, user.name),
           user: user,
           tweets: formattedTweets,
-          tweetsCount: results.stats.tweets,
-          followersCount: results.stats.followers,
-          followingsCount: results.stats.followings,
+          stats: results.stats,
           isFollowing: results.isFollowing
         });
       });
@@ -125,8 +123,8 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
       return next(err);
     }
     async.parallel({
-      followers: function(fn) {
-        User.listFollowers(user.id, fn);
+      stats: function(fn) {
+        stats(user.id, fn);
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
@@ -135,8 +133,8 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
         }
         User.isFollowing(user.id, loginUser.id, fn);
       },
-      stats: function(fn) {
-        stats(user.id, fn);
+      followers: function(fn) {
+        User.listFollowers(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
@@ -148,9 +146,7 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
         view: 'followers',
         user: user,
         followers: results.followers,
-        tweetsCount: results.stats.tweets,
-        followersCount: results.stats.followers,
-        followingsCount: results.stats.followings,
+        stats: results.stats,
         isFollowing: results.isFollowing
       });
     });
@@ -166,8 +162,8 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
       return next(err);
     }
     async.parallel({
-      followings: function(fn) {
-        User.listFollowings(user.id, fn);
+      stats: function(fn) {
+        stats(user.id, fn);
       },
       isFollowing: function(fn) {
         // Check if the user is followed by the user who is currently logged in.
@@ -176,8 +172,8 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
         }
         User.isFollowing(user.id, loginUser.id, fn);
       },
-      stats: function(fn) {
-        stats(user.id, fn);
+      followings: function(fn) {
+        User.listFollowings(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
@@ -189,9 +185,7 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
         view: 'followings',
         user: user,
         followings: results.followings,
-        tweetsCount: results.stats.tweets,
-        followersCount: results.stats.followers,
-        followingsCount: results.stats.followings,
+        stats: results.stats,
         isFollowing: results.isFollowing
       });
     });
