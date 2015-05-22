@@ -34,13 +34,23 @@ function createUserIndex(users) {
   return index;
 }
 
-router.get('/', page(Tweet.count, 5), function(req, res, next) {
+router.get('/', page(function(id, fn) {
+  User.getTimeline(id, function(err, ids) {
+    if (err) {
+      return fn(err);
+    }
+    console.log(ids);
+    fn(null, ids.length);
+  });
+}, 5), function(req, res, next) {
   if (!res.locals.loginUser) {
     return res.redirect('/login');
   }
 
   var loginUser = res.locals.loginUser;
   var page = req.page;
+
+  console.log(page);
 
   async.parallel({
     timelineTweetIds: function(fn) {
