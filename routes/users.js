@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 var User = require('../lib/model/user');
+var Tweet = require('../lib/model/tweet');
 
 var util = require('util');
 var async = require('async');
@@ -70,7 +71,7 @@ router.get('/:name', isMe(), function(req, res, next) {
         User.isFollowing(user.id, loginUser.id, fn);
       },
       tweets: function(fn) {
-        User.listTweets(user.id, fn);
+        Tweet.getUserTimeline(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
@@ -139,7 +140,7 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
         User.isFollowing(user.id, loginUser.id, fn);
       },
       tweets: function(fn) {
-        User.listTweets(user.id, fn);
+        Tweet.getUserTimeline(user.id, fn);
       }
     }, function(err, results) {
       if (err) {
@@ -187,7 +188,7 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
         User.isFollowing(user.id, loginUser.id, fn);
       },
       tweets: function(fn) {
-        User.listTweets(user.id, fn);
+        Tweet.getUserTimeline(user.id, fn);
       }
     }, function(err, results) {
       if (err) {

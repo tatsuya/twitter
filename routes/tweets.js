@@ -34,7 +34,7 @@ function createUserIndex(users) {
   return index;
 }
 
-router.get('/', page(User.getTweetCountInTimeline, 5), function(req, res, next) {
+router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
   if (!res.locals.loginUser) {
     return res.redirect('/login');
   }
@@ -43,11 +43,11 @@ router.get('/', page(User.getTweetCountInTimeline, 5), function(req, res, next) 
   var page = req.page;
 
   async.parallel({
-    timelineTweetIds: function(fn) {
-      User.getTimeline(loginUser.id, fn);
+    tweets: function(fn) {
+      Tweet.getHomeTimeline(loginUser.id, fn);
     },
-    userTweetIds: function (fn) {
-      User.listTweets(loginUser.id, fn);
+    tweetsCount: function (fn) {
+      Tweet.countUserTimeline(loginUser.id, fn);
     },
     followerIds: async.apply(User.listFollowerIds, loginUser.id),
     followingIds: async.apply(User.listFollowingIds, loginUser.id),
@@ -57,51 +57,44 @@ router.get('/', page(User.getTweetCountInTimeline, 5), function(req, res, next) 
       return next(err);
     }
 
-    async.map(results.timelineTweetIds, Tweet.get, function(err, tweets) {
+    var tweets = results.tweets;
+
+    async.map(extractUserIds(tweets), User.get, function(err, users) {
       if (err) {
         return next(err);
       }
 
-      async.map(extractUserIds(tweets), User.get, function(err, users) {
-        if (err) {
-          return next(err);
-        }
+      var userIndex = createUserIndex(users);
 
-        var userIndex = createUserIndex(users);
-
-        console.log(tweets);
-
-        var formattedTweets = tweets
-          .map(function addUserInfo(tweet) {
-            tweet.user = userIndex[tweet.user_id];
-            return tweet;
-          })
-          .map(function timeCreatedAtFromNow(tweet) {
-            // Pass true to get the value without the suffix.
-            //
-            // Examples:
-            //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-            //   moment([2007, 0, 29]).fromNow(true); // 4 years
-            tweet.created_at = moment(tweet.created_at).fromNow(true);
-            return tweet;
-          });
-
-        if (req.remoteUser) {
-          return res.json(tweets);
-        }
-
-        res.render('tweets', {
-          title: 'Twitter',
-          user: res.locals.loginUser,
-          suggestions: results.suggestions,
-          tweets: formattedTweets,
-          tweetsCount: results.userTweetIds.length,
-          followersCount: results.followerIds.length,
-          followingsCount: results.followingIds.length
+      var formattedTweets = tweets
+        .map(function addUserInfo(tweet) {
+          tweet.user = userIndex[tweet.user_id];
+          return tweet;
+        })
+        .map(function timeCreatedAtFromNow(tweet) {
+          // Pass true to get the value without the suffix.
+          //
+          // Examples:
+          //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+          //   moment([2007, 0, 29]).fromNow(true); // 4 years
+          tweet.created_at = moment(tweet.created_at).fromNow(true);
+          return tweet;
         });
+
+      if (req.remoteUser) {
+        return res.json(tweets);
+      }
+
+      res.render('tweets', {
+        title: 'Twitter',
+        user: res.locals.loginUser,
+        suggestions: results.suggestions,
+        tweets: formattedTweets,
+        tweetsCount: results.tweetsCount,
+        followersCount: results.followerIds.length,
+        followingsCount: results.followingIds.length
       });
     });
-
   });
 });
 
@@ -129,30 +122,22 @@ router.post('/',
         return next(err);
       }
 
-      User.addTweet(loginUser.id, tweet.id, date, function(err) {
+      User.listFollowerIds(loginUser.id, function(err, followerIds) {
         if (err) {
           return next(err);
         }
-
-        User.listFollowerIds(loginUser.id, function(err, followerIds) {
+        async.each(followerIds, function(followerId, fn) {
+          Tweet.addToHomeTimeline(tweet.id, followerId, date.getTime(), fn);
+        }, function(err) {
           if (err) {
             return next(err);
           }
 
-          followerIds.push(loginUser.id);
-          async.each(followerIds, function(followerId, fn) {
-            User.addTweetToTimeline(followerId, tweet.id, date, fn);
-          }, function(err) {
-            if (err) {
-              return next(err);
-            }
-
-            if (req.remoteUser) {
-              res.json({ message: 'Tweet added.' });
-            } else {
-              res.redirect('/');
-            }
-          });
+          if (req.remoteUser) {
+            res.json({ message: 'Tweet added.' });
+          } else {
+            res.redirect('/');
+          }
         });
       });
     });
@@ -177,12 +162,12 @@ router.post('/:id', function(req, res, next) {
       return next(err);
     }
 
-    Tweet.delete(tweetId, function(err) {
+    Tweet.removeFromUserTimeline(tweetId, loginUser.id, function(err) {
       if (err) {
         return next(err);
       }
 
-      User.removeTweet(loginUser.id, tweetId, function(err) {
+      Tweet.removeFromHomeTimeline(tweetId, loginUser.id, function(err) {
         if (err) {
           return next(err);
         }
@@ -192,14 +177,20 @@ router.post('/:id', function(req, res, next) {
             return next(err);
           }
 
-          followerIds.push(loginUser.id);
           async.each(followerIds, function(followerId, fn) {
-            User.removeTweetFromTimeline(followerId, tweetId, fn);
+            Tweet.removeFromHomeTimeline(tweetId, followerId, fn);
           }, function(err) {
             if (err) {
               return next(err);
             }
-            res.redirect('/');
+
+            Tweet.delete(tweetId, function(err) {
+              if (err) {
+                return next(err);
+              }
+
+              res.redirect('/');
+            });
           });
         });
       });
