@@ -34,15 +34,7 @@ function createUserIndex(users) {
   return index;
 }
 
-router.get('/', page(function(id, fn) {
-  User.getTimeline(id, function(err, ids) {
-    if (err) {
-      return fn(err);
-    }
-    console.log(ids);
-    fn(null, ids.length);
-  });
-}, 5), function(req, res, next) {
+router.get('/', page(User.getTweetCountInTimeline, 5), function(req, res, next) {
   if (!res.locals.loginUser) {
     return res.redirect('/login');
   }
