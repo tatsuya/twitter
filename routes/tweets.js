@@ -43,57 +43,58 @@ router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
   var page = req.page;
 
   async.parallel({
-    tweets: function(fn) {
-      Tweet.getHomeTimeline(loginUser.id, fn);
+    tweetsCount: async.apply(Tweet.countUserTimeline, loginUser.id),
+    followersCount: async.apply(User.countFollowers, loginUser.id),
+    followingsCount: async.apply(User.countFollowings, loginUser.id),
+    formattedTweets: function(fn) {
+      Tweet.getHomeTimeline(loginUser.id, function(err, tweets) {
+        if (err) {
+          return fn(err);
+        }
+        async.map(extractUserIds(tweets), User.get, function(err, users) {
+          if (err) {
+            return fn(err);
+          }
+
+          var userIndex = createUserIndex(users);
+
+          var formattedTweets = tweets
+            .map(function addUserInfo(tweet) {
+              tweet.user = userIndex[tweet.user_id];
+              return tweet;
+            })
+            .map(function timeCreatedAtFromNow(tweet) {
+              // Pass true to get the value without the suffix.
+              //
+              // Examples:
+              //   moment([2007, 0, 29]).fromNow();     // 4 years ago
+              //   moment([2007, 0, 29]).fromNow(true); // 4 years
+              tweet.created_at = moment(tweet.created_at).fromNow(true);
+              return tweet;
+            });
+
+          return fn(null, formattedTweets);
+        });
+      })
     },
-    tweetsCount: function (fn) {
-      Tweet.countUserTimeline(loginUser.id, fn);
-    },
-    followerIds: async.apply(User.listFollowerIds, loginUser.id),
-    followingIds: async.apply(User.listFollowingIds, loginUser.id),
     suggestions: async.apply(User.getSuggestions, loginUser.id)
   }, function(err, results) {
     if (err) {
       return next(err);
     }
 
-    var tweets = results.tweets;
+    if (req.remoteUser) {
+      return res.json(results.formattedTweets);
+    }
 
-    async.map(extractUserIds(tweets), User.get, function(err, users) {
-      if (err) {
-        return next(err);
-      }
-
-      var userIndex = createUserIndex(users);
-
-      var formattedTweets = tweets
-        .map(function addUserInfo(tweet) {
-          tweet.user = userIndex[tweet.user_id];
-          return tweet;
-        })
-        .map(function timeCreatedAtFromNow(tweet) {
-          // Pass true to get the value without the suffix.
-          //
-          // Examples:
-          //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-          //   moment([2007, 0, 29]).fromNow(true); // 4 years
-          tweet.created_at = moment(tweet.created_at).fromNow(true);
-          return tweet;
-        });
-
-      if (req.remoteUser) {
-        return res.json(tweets);
-      }
-
-      res.render('tweets', {
-        title: 'Twitter',
-        user: res.locals.loginUser,
-        suggestions: results.suggestions,
-        tweets: formattedTweets,
-        tweetsCount: results.tweetsCount,
-        followersCount: results.followerIds.length,
-        followingsCount: results.followingIds.length
-      });
+    res.render('tweets', {
+      title: 'Twitter',
+      user: loginUser,
+      tweetsCount: results.tweetsCount,
+      followersCount: results.followersCount,
+      followingsCount: results.followingsCount,
+      tweets: results.formattedTweets,
+      suggestions: results.suggestions
     });
   });
 });
