@@ -113,6 +113,7 @@ $ git push heroku master
 ## References
 
 - [antirez/retwis][retwis] - A Twitter-toy clone written in PHP and Redis
+- [twissandra/twissandra][twissandra] - Twissandra is an example project, created to learn and demonstrate how to use Cassandra.
 
 ## License
 
@@ -124,3 +125,4 @@ MIT © Tatsuya Oiwa
 [express]: http://expressjs.com/
 [heroku-getting-started-with-node]: https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction
 [retwis]: https://github.com/antirez/retwis
+[twissandra]: https://github.com/twissandra/twissandra
