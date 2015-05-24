@@ -10,6 +10,7 @@ var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
 
 var stats = require('../lib/helper/stats');
+var join = require('../lib/helper/join');
 var format = require('../lib/helper/format');
 
 /**
@@ -50,28 +51,6 @@ function checkRelationship(loginUser) {
   };
 }
 
-function extractUserIds(tweets) {
-  var userIds = [];
-  tweets.forEach(function(tweet) {
-    var userId = tweet.user_id;
-    if (userIds.indexOf(userId) < 0) {
-      userIds.push(userId);
-    }
-  });
-  return userIds;
-}
-
-function createUserIndex(users) {
-  var index = {};
-  users.forEach(function(user) {
-    var userId = user.id;
-    if (!index.hasOwnProperty(userId)) {
-      index[userId] = user;
-    }
-  });
-  return index;
-}
-
 router.get('/:name', isMe(), function(req, res, next) {
   var loginUser = res.locals.loginUser;
   var name = req.params.name;
@@ -92,18 +71,11 @@ router.get('/:name', isMe(), function(req, res, next) {
           if (err) {
             return fn(err);
           }
-          async.map(extractUserIds(tweets), User.get, function(err, users) {
+          async.map(tweets, join, function(err, tweets) {
             if (err) {
               return fn(err);
             }
-            var userIndex = createUserIndex(users);
-            var formattedTweets = tweets
-              .map(function addUserInfo(tweet) {
-                tweet.user = userIndex[tweet.user_id];
-                return tweet;
-              })
-              .map(format.relativeTime('created_at'));
-            fn(null, formattedTweets);
+            return fn(null, tweets.map(format.relativeTime('created_at')));
           });
         });
       }
