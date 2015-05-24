@@ -28,6 +28,27 @@ function isMe() {
   };
 }
 
+/**
+ * Returns a function to check if the `user` is followed by the `loginUser`.
+ *
+ * @param  {Object} loginUser - The user currently logged in.
+ * @return {Function}
+ */
+function checkRelationship(loginUser) {
+  return function(user, fn) {
+    if (!loginUser || !loginUser.id) {
+      return fn(null, user);
+    }
+    User.isFollowing(user.id, loginUser.id, function(err, isFollowing) {
+      if (err) {
+        return fn(err);
+      }
+      user.following = isFollowing;
+      fn(null, user);
+    });
+  };
+}
+
 function extractUserIds(tweets) {
   var userIds = [];
   tweets.forEach(function(tweet) {
@@ -134,7 +155,12 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
         User.isFollowing(user.id, loginUser.id, fn);
       },
       followers: function(fn) {
-        User.listFollowers(user.id, fn);
+        User.listFollowers(user.id, function(err, users) {
+          if (err) {
+            return fn(err);
+          }
+          async.map(users, checkRelationship(loginUser), fn);
+        });
       }
     }, function(err, results) {
       if (err) {
@@ -161,6 +187,7 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
     if (err) {
       return next(err);
     }
+
     async.parallel({
       stats: function(fn) {
         stats(user.id, fn);
@@ -173,7 +200,12 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
         User.isFollowing(user.id, loginUser.id, fn);
       },
       followings: function(fn) {
-        User.listFollowings(user.id, fn);
+        User.listFollowings(user.id, function(err, users) {
+          if (err) {
+            return fn(err);
+          }
+          async.map(users, checkRelationship(loginUser), fn);
+        });
       }
     }, function(err, results) {
       if (err) {

@@ -16,11 +16,11 @@ block content
             each suggestion in suggestions
               li.list-group-item
                 .row
-                  .col-sm-10
-                    a.text-gray-dark(href="/users/" + suggestion.name)
-                      strong #{suggestion.fullname}
-                      span &nbsp;
-                      span.text-muted @#{suggestion.name}
-                  .col-sm-2
+                  .col-sm-9
+                    h4.list-group-item-heading
+                      a.text-gray-dark(href="/users/" + suggestion.name)= suggestion.fullname
+                    p.list-group-item-text
+                      a.text-muted(href="/users/" + suggestion.name) @#{suggestion.name}
+                  .col-sm-3(style="padding-top: 3px; padding-bottom: 3px;")
                     form(action="/follow/" + suggestion.name method="post")
-                      button.btn.btn-default.btn-sm(type="submit") Follow
+                      button.btn.btn-default.pull-right(type="submit") Follow

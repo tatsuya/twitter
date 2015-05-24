@@ -23,7 +23,13 @@ block content
               p.lead(style="margin-bottom: 0;")= title
             each following in followings
               li.list-group-item
-                h4.list-group-item-heading
-                  a.text-gray-dark(href="/users/" + following.name)=  following.fullname
-                p.list-group-item-text
-                  a.text-muted(href="/users/" + following.name) @#{following.name}
+                .row
+                  .col-sm-9
+                    h4.list-group-item-heading
+                      a.text-gray-dark(href="/users/" + following.name)= following.fullname
+                    p.list-group-item-text
+                      a.text-muted(href="/users/" + following.name) @#{following.name}
+                  .col-sm-3(style="padding-top: 3px; padding-bottom: 3px;")
+                    form(action="/follow/" + following.name method="post")
+                      input(type="hidden" name="_method" value="delete")
+                      button.btn.btn-default.pull-right(type="submit") Unfollow
