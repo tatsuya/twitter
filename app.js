@@ -45,7 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api', auth(User.authenticate, 'shoutbox'));
+app.use('/api', auth(User.authenticate, 'twitter'));
 app.use(user());
 
 app.use('/api', api);
