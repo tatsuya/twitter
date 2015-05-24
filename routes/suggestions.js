@@ -6,15 +6,16 @@ var router = express.Router();
 var User = require('../lib/model/user');
 
 router.get('/', function(req, res, next) {
-  if (!res.locals.loginUser) {
+  var loginUser = req.loginUser;
+  if (!loginUser) {
     return res.redirect('/login');
   }
-  User.getSuggestions(res.locals.loginUser.id, function(err, suggestions) {
+  User.getSuggestions(loginUser.id, null, function(err, suggestions) {
     if (err) {
       return next(err);
     }
     res.render('suggestions', {
-      title: 'Suggestions',
+      title: 'Who to follow',
       suggestions: suggestions
     });
   });

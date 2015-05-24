@@ -40,7 +40,9 @@ router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
         });
       });
     },
-    suggestions: async.apply(User.getSuggestions, loginUser.id)
+    suggestions: function(fn) {
+      User.getSuggestions(loginUser.id, 3, fn);
+    }
   }, function(err, results) {
     if (err) {
       return next(err);
