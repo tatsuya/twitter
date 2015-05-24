@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 
+var async = require('async');
 var validate = require('../lib/middleware/validate');
 var User = require('../lib/model/user');
 
@@ -86,19 +87,47 @@ router.get('/deactivate', function(req, res) {
 router.post('/deactivate', function(req, res, next) {
   var user = req.loginUser;
 
-  User.deleteId(user.name, function(err) {
+  // Unfollow all users
+  User.listFollowingIds(user.id, function(err, followingIds) {
     if (err) {
       return next(err);
     }
-    User.delete(user.id, function(err) {
+    async.each(followingIds, function(followingId, fn) {
+      User.unfollow(followingId, user.id, fn);
+    }, function(err) {
       if (err) {
         return next(err);
       }
-      req.session.destroy(function(err) {
+    });
+
+    // Notify all followers to unfollow me
+    User.listFollowerIds(user.id, function(err, followerIds) {
+      if (err) {
+        return next(err);
+      }
+      async.each(followerIds, function(followerId, fn) {
+        User.unfollow(user.id, followerId, fn);
+      }, function(err) {
         if (err) {
           return next(err);
         }
-        res.redirect('/');
+      });
+
+      User.deleteId(user.name, function(err) {
+        if (err) {
+          return next(err);
+        }
+        User.delete(user.id, function(err) {
+          if (err) {
+            return next(err);
+          }
+          req.session.destroy(function(err) {
+            if (err) {
+              return next(err);
+            }
+            res.redirect('/');
+          });
+        });
       });
     });
   });
