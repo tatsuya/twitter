@@ -29,7 +29,8 @@ function isMe() {
 }
 
 /**
- * Returns a function to check if the `user` is followed by the `loginUser`.
+ * Returns a function which checks if the given `user` is followed by the
+ * `loginUser`.
  *
  * @param  {Object} loginUser - The user currently logged in.
  * @return {Function}
@@ -39,12 +40,12 @@ function checkRelationship(loginUser) {
     if (!loginUser || !loginUser.id) {
       return fn(null, user);
     }
-    User.isFollowing(user.id, loginUser.id, function(err, isFollowing) {
+    User.listFollowerIds(user.id, function(err, followerIds) {
       if (err) {
         return fn(err);
       }
-      user.following = isFollowing;
-      fn(null, user);
+      user.following = followerIds.indexOf(loginUser.id) > -1;
+      return fn(null, user);
     });
   };
 }
@@ -80,15 +81,11 @@ router.get('/:name', isMe(), function(req, res, next) {
       return next(err);
     }
     async.parallel({
+      user: function(fn) {
+        checkRelationship(loginUser)(user, fn);
+      },
       stats: function(fn) {
         stats(user.id, fn);
-      },
-      isFollowing: function(fn) {
-        // Check if the user is followed by the user who is currently logged in.
-        if (!loginUser) {
-          return fn(null, false);
-        }
-        User.isFollowing(user.id, loginUser.id, fn);
       },
       tweets: function(fn) {
         Tweet.getUserTimeline(user.id, fn);
@@ -97,7 +94,6 @@ router.get('/:name', isMe(), function(req, res, next) {
       if (err) {
         return next(err);
       }
-
       var tweets = results.tweets;
       var userIds = extractUserIds(tweets);
 
@@ -125,10 +121,9 @@ router.get('/:name', isMe(), function(req, res, next) {
 
         res.render('users', {
           title: util.format('%s (@%s)', user.fullname, user.name),
-          user: user,
-          tweets: formattedTweets,
+          user: results.user,
           stats: results.stats,
-          isFollowing: results.isFollowing
+          tweets: formattedTweets
         });
       });
     });
@@ -144,15 +139,11 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
       return next(err);
     }
     async.parallel({
+      user: function(fn) {
+        checkRelationship(loginUser)(user, fn);
+      },
       stats: function(fn) {
         stats(user.id, fn);
-      },
-      isFollowing: function(fn) {
-        // Check if the user is followed by the user who is currently logged in.
-        if (!loginUser) {
-          return fn(null, false);
-        }
-        User.isFollowing(user.id, loginUser.id, fn);
       },
       followers: function(fn) {
         User.listFollowers(user.id, function(err, users) {
@@ -170,10 +161,9 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
       res.render('followers', {
         title: util.format('People following %s', user.fullname),
         view: 'followers',
-        user: user,
-        followers: results.followers,
+        user: results.user,
         stats: results.stats,
-        isFollowing: results.isFollowing
+        followers: results.followers
       });
     });
   });
@@ -189,15 +179,11 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
     }
 
     async.parallel({
+      user: function(fn) {
+        checkRelationship(loginUser)(user, fn);
+      },
       stats: function(fn) {
         stats(user.id, fn);
-      },
-      isFollowing: function(fn) {
-        // Check if the user is followed by the user who is currently logged in.
-        if (!loginUser) {
-          return fn(null, false);
-        }
-        User.isFollowing(user.id, loginUser.id, fn);
       },
       followings: function(fn) {
         User.listFollowings(user.id, function(err, users) {
@@ -215,10 +201,9 @@ router.get('/:name/followings', isMe(), function(req, res, next) {
       res.render('followings', {
         title: util.format('People followed by %s', user.fullname),
         view: 'followings',
-        user: user,
-        followings: results.followings,
+        user: results.user,
         stats: results.stats,
-        isFollowing: results.isFollowing
+        followings: results.followings
       });
     });
   });

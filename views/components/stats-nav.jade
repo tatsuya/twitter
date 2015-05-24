@@ -26,7 +26,7 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
             div(style="padding: 18px 10px;")
               if isMe
                 a.btn.btn-default(href="/settings" role="button") Edit profile
-              else if isFollowing
+              else if user.following
                 form(action="/follow/" + user.name method="post")
                   input(type="hidden" name="_method" value="delete")
                   input.btn.btn-default(type="submit" value="Unfollow")
