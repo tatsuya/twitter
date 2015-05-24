@@ -4,7 +4,6 @@ var express = require('express');
 var router = express.Router();
 
 var async = require('async');
-var moment = require('moment');
 
 var validate = require('../lib/middleware/validate');
 var page = require('../lib/middleware/page');
@@ -13,6 +12,7 @@ var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
 
 var stats = require('../lib/helper/stats');
+var format = require('../lib/helper/format');
 
 function extractUserIds(tweets) {
   var userIds = [];
@@ -48,7 +48,7 @@ router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
     stats: function(fn) {
       stats(loginUser.id, fn);
     },
-    formattedTweets: function(fn) {
+    tweets: function(fn) {
       Tweet.getHomeTimeline(loginUser.id, function(err, tweets) {
         if (err) {
           return fn(err);
@@ -57,27 +57,16 @@ router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
           if (err) {
             return fn(err);
           }
-
           var userIndex = createUserIndex(users);
-
           var formattedTweets = tweets
             .map(function addUserInfo(tweet) {
               tweet.user = userIndex[tweet.user_id];
               return tweet;
             })
-            .map(function timeCreatedAtFromNow(tweet) {
-              // Pass true to get the value without the suffix.
-              //
-              // Examples:
-              //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-              //   moment([2007, 0, 29]).fromNow(true); // 4 years
-              tweet.created_at = moment(tweet.created_at).fromNow(true);
-              return tweet;
-            });
-
+            .map(format.relativeTime('created_at'));
           return fn(null, formattedTweets);
         });
-      })
+      });
     },
     suggestions: async.apply(User.getSuggestions, loginUser.id)
   }, function(err, results) {
@@ -86,14 +75,14 @@ router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
     }
 
     if (req.remoteUser) {
-      return res.json(results.formattedTweets);
+      return res.json(results.tweets);
     }
 
     res.render('tweets', {
       title: 'Twitter',
       user: loginUser,
       stats: results.stats,
-      tweets: results.formattedTweets,
+      tweets: results.tweets,
       suggestions: results.suggestions
     });
   });

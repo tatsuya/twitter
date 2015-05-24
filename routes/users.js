@@ -3,14 +3,14 @@
 var express = require('express');
 var router = express.Router();
 
-var User = require('../lib/model/user');
-var Tweet = require('../lib/model/tweet');
-
-var stats = require('../lib/helper/stats');
-
 var util = require('util');
 var async = require('async');
-var moment = require('moment');
+
+var Tweet = require('../lib/model/tweet');
+var User = require('../lib/model/user');
+
+var stats = require('../lib/helper/stats');
+var format = require('../lib/helper/format');
 
 /**
  * Express middleware to check if given param name is same as the user name who
@@ -88,43 +88,35 @@ router.get('/:name', isMe(), function(req, res, next) {
         stats(user.id, fn);
       },
       tweets: function(fn) {
-        Tweet.getUserTimeline(user.id, fn);
+        Tweet.getUserTimeline(user.id, function(err, tweets) {
+          if (err) {
+            return fn(err);
+          }
+          async.map(extractUserIds(tweets), User.get, function(err, users) {
+            if (err) {
+              return fn(err);
+            }
+            var userIndex = createUserIndex(users);
+            var formattedTweets = tweets
+              .map(function addUserInfo(tweet) {
+                tweet.user = userIndex[tweet.user_id];
+                return tweet;
+              })
+              .map(format.relativeTime('created_at'));
+            fn(null, formattedTweets);
+          });
+        });
       }
     }, function(err, results) {
       if (err) {
         return next(err);
       }
-      var tweets = results.tweets;
-      var userIds = extractUserIds(tweets);
 
-      async.map(userIds, User.get, function(err, users) {
-        if (err) {
-          return next(err);
-        }
-
-        var userIndex = createUserIndex(users);
-
-        var formattedTweets = tweets
-          .map(function addUserInfo(tweet) {
-            tweet.user = userIndex[tweet.user_id];
-            return tweet;
-          })
-          .map(function timeCreatedAtFromNow(tweet) {
-            // Pass true to get the value without the suffix.
-            //
-            // Examples:
-            //   moment([2007, 0, 29]).fromNow();     // 4 years ago
-            //   moment([2007, 0, 29]).fromNow(true); // 4 years
-            tweet.created_at = moment(tweet.created_at).fromNow(true);
-            return tweet;
-          });
-
-        res.render('users', {
-          title: util.format('%s (@%s)', user.fullname, user.name),
-          user: results.user,
-          stats: results.stats,
-          tweets: formattedTweets
-        });
+      res.render('users', {
+        title: util.format('%s (@%s)', user.fullname, user.name),
+        user: results.user,
+        stats: results.stats,
+        tweets: results.tweets
       });
     });
   });
