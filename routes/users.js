@@ -6,6 +6,8 @@ var router = express.Router();
 var util = require('util');
 var async = require('async');
 
+var page = require('../lib/middleware/page');
+
 var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
 
@@ -52,7 +54,8 @@ function checkRelationship(loginUser) {
 }
 
 router.get('/:name', isMe(), function(req, res, next) {
-  var loginUser = res.locals.loginUser;
+  var loginUser = req.loginUser;
+  var page = req.page;
   var name = req.params.name;
 
   User.getByName(name, function(err, user) {
@@ -67,7 +70,7 @@ router.get('/:name', isMe(), function(req, res, next) {
         stats(user.id, fn);
       },
       tweets: function(fn) {
-        Tweet.getUserTimeline(user.id, function(err, tweets) {
+        Tweet.getUserTimeline(user.id, 0, -1, function(err, tweets) {
           if (err) {
             return fn(err);
           }
@@ -95,7 +98,7 @@ router.get('/:name', isMe(), function(req, res, next) {
 });
 
 router.get('/:name/followers', isMe(), function(req, res, next) {
-  var loginUser = res.locals.loginUser;
+  var loginUser = req.loginUser;
   var name = req.params.name;
 
   User.getByName(name, function(err, user) {
@@ -134,7 +137,7 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
 });
 
 router.get('/:name/followings', isMe(), function(req, res, next) {
-  var loginUser = res.locals.loginUser;
+  var loginUser = req.loginUser;
   var name = req.params.name;
 
   User.getByName(name, function(err, user) {

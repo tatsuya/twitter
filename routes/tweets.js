@@ -15,20 +15,20 @@ var stats = require('../lib/helper/stats');
 var join = require('../lib/helper/join');
 var format = require('../lib/helper/format');
 
-router.get('/', page(Tweet.countHomeTimeline, 5), function(req, res, next) {
-  if (!res.locals.loginUser) {
+router.get('/', page(Tweet.countHomeTimeline, 50), function(req, res, next) {
+  var loginUser = req.loginUser;
+  var page = req.page;
+
+  if (!loginUser) {
     return res.redirect('/login');
   }
-
-  var loginUser = res.locals.loginUser;
-  var page = req.page;
 
   async.parallel({
     stats: function(fn) {
       stats(loginUser.id, fn);
     },
     tweets: function(fn) {
-      Tweet.getHomeTimeline(loginUser.id, function(err, tweets) {
+      Tweet.getHomeTimeline(loginUser.id, page.from, page.to, function(err, tweets) {
         if (err) {
           return fn(err);
         }

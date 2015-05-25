@@ -24,7 +24,7 @@ router.get('/', function(req, res, next) {
       stats(user.id, fn);
     },
     tweets: function(fn) {
-      Tweet.getHomeTimeline(user.id, fn);
+      Tweet.getHomeTimeline(user.id, 0, -1, fn);
     }
   }, function(err, results) {
     if (err) {
