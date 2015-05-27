@@ -52,7 +52,7 @@ block content
                                     span.text-muted= tweet.created_at
                                 p(style="word-wrap: break-word;")= tweet.text
                               .modal-footer
-                                form(action="/tweets/#{tweet.id}" method="post")
+                                form(action="/post/#{tweet.id}" method="post")
                                   button.btn.btn-default(type="button", data-dismiss="modal") Close
                                   input(type="hidden" name="_method" value="delete")
                                   input.btn.btn-primary(type="submit" value="Delete" style="margin-left: 5px;")
