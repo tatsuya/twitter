@@ -9,16 +9,16 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
       .col-md-6
         ul.nav.navbar-nav
           li(class=view || "active")
-            a(href="/users/" + user.name)
-              small.text-muted.stats-nav-label TWEETS
+            a(href="/users/#{user.name}")
+              small.text-muted(style="display: block;") TWEETS
               strong #{stats.tweets}
           li(class=view === "followings" ? "active" : undefined)
-            a(href="/users/" + user.name + "/followings")
-              small.text-muted.stats-nav-label FOLLOWING
+            a(href="/users/#{user.name}/followings")
+              small.text-muted(style="display: block;") FOLLOWING
               strong #{stats.followings}
           li(class=view === "followers" ? "active" : undefined)
-            a(href="/users/" + user.name + "/followers")
-              small.text-muted.stats-nav-label FOLLOWERS
+            a(href="/users/#{user.name}/followers")
+              small.text-muted(style="display: block;") FOLLOWERS
               strong #{stats.followers}
       .col-md-3
         ul.nav.navbar-nav.navbar-right
@@ -27,9 +27,9 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
               if isMe
                 a.btn.btn-default(href="/settings" role="button") Edit profile
               else if user.following
-                form(action="/follow/" + user.name method="post")
+                form(action="/follow/#{user.name}" method="post")
                   input(type="hidden" name="_method" value="delete")
                   input.btn.btn-default(type="submit" value="Unfollow")
               else
-                form(action="/follow/" + user.name method="post")
+                form(action="/follow/#{user.name}" method="post")
                   input.btn.btn-default(type="submit" value="Follow")

@@ -17,15 +17,15 @@ block content
               p.list-group-item-text
                 a.text-muted(href="/users/" + user.name) @#{user.name}
             .list-group-item
-              p.list-group-item-text.text-muted TWEETS
-              h4.list-group-item-heading
-                a(href="/users/" + user.name) #{stats.tweets}
-              p.list-group-item-text.text-muted FOLLOWINGS
-              h4.list-group-item-heading
-                a(href="/users/" + user.name + "/followings") #{stats.followings}
-              p.list-group-item-text.text-muted FOLLOWERS
-              h4.list-group-item-heading
-                a(href="/users/" + user.name + "/followers") #{stats.followers}
+              a(href="/users/#{user.name}")
+                small.text-muted(style="display: block;") TWEETS
+                strong #{stats.tweets}
+              a(href="/users/#{user.name}/followings")
+                small.text-muted(style="display: block;") FOLLOWINGS
+                strong #{stats.followings}
+              a(href="/users/#{user.name}/followers")
+                small.text-muted(style="display: block;") FOLLOWERS
+                strong #{stats.followers}
 
       .col-md-6
         if !stats.tweets
