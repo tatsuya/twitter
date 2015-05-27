@@ -3,21 +3,21 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
     .row
       .col-md-3
         h4(style="margin-top: 15px; margin-bottom: 5px;")
-          a.text-gray-dark(href="/users/" + user.name)= user.fullname
+          a.text-gray-dark(href="/@#{user.name}")= user.fullname
         p
-          a.text-muted(href="/users/" + user.name) @#{user.name}
+          a.text-muted(href="/@#{user.name}") @#{user.name}
       .col-md-6
         ul.nav.navbar-nav
           li(class=view || "active")
-            a(href="/users/#{user.name}")
+            a(href="/@#{user.name}")
               small.text-muted(style="display: block;") TWEETS
               strong #{stats.tweets}
           li(class=view === "followings" ? "active" : undefined)
-            a(href="/users/#{user.name}/followings")
+            a(href="/@#{user.name}/followings")
               small.text-muted(style="display: block;") FOLLOWING
               strong #{stats.followings}
           li(class=view === "followers" ? "active" : undefined)
-            a(href="/users/#{user.name}/followers")
+            a(href="/@#{user.name}/followers")
               small.text-muted(style="display: block;") FOLLOWERS
               strong #{stats.followers}
       .col-md-3

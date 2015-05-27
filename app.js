@@ -18,13 +18,12 @@ var routes = require('./routes/index');
 var signup = require('./routes/signup');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
+var post = require('./routes/post');
 var tweets = require('./routes/tweets');
-var users = require('./routes/users');
+var profile = require('./routes/profile');
 var suggestions = require('./routes/suggestions');
 var follow = require('./routes/follow');
 var settings = require('./routes/settings');
-var post = require('./routes/post');
-var api = require('./routes/api');
 
 var app = express();
 
@@ -48,16 +47,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', auth(User.authenticate, 'twitter'));
 app.use(user());
 
-app.use('/api', api);
 app.use('/signup', signup);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/post', post);
 app.use('/tweets', tweets);
-app.use('/users', users);
 app.use('/suggestions', suggestions);
 app.use('/follow', follow);
 app.use('/settings', settings);
+app.use('/', profile);
 app.use('/', routes);
 
 // catch 404 and forward to error handler

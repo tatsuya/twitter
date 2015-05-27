@@ -13,17 +13,17 @@ block content
           .list-group
             .list-group-item
               h4.list-group-item-heading
-                a.text-gray-dark(href="/users/" + user.name)=  user.fullname
+                a.text-gray-dark(href="/@#{user.name}")=  user.fullname
               p.list-group-item-text
-                a.text-muted(href="/users/" + user.name) @#{user.name}
+                a.text-muted(href="/@#{user.name}") @#{user.name}
             .list-group-item
-              a(href="/users/#{user.name}")
+              a(href="/@#{user.name}")
                 small.text-muted(style="display: block;") TWEETS
                 strong #{stats.tweets}
-              a(href="/users/#{user.name}/followings")
+              a(href="/@#{user.name}/followings")
                 small.text-muted(style="display: block;") FOLLOWINGS
                 strong #{stats.followings}
-              a(href="/users/#{user.name}/followers")
+              a(href="/@#{user.name}/followers")
                 small.text-muted(style="display: block;") FOLLOWERS
                 strong #{stats.followers}
 
@@ -61,7 +61,7 @@ block content
               a(href="/suggestions") View all
               each suggestion in suggestions
                 li.list-group-item
-                  a.text-gray-dark(href="/users/" + suggestion.name)
+                  a.text-gray-dark(href="@#{suggestion.name}")
                     strong #{suggestion.fullname}
                     span &nbsp;
                     span.text-muted @#{suggestion.name}

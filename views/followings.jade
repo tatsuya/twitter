@@ -25,10 +25,10 @@ block content
                 .row
                   .col-sm-9
                     h4.list-group-item-heading
-                      a.text-gray-dark(href="/users/" + following.name)= following.fullname
+                      a.text-gray-dark(href="/@#{following.name}")= following.fullname
                     p.list-group-item-text
-                      a.text-muted(href="/users/" + following.name) @#{following.name}
+                      a.text-muted(href="/@#{following.name}") @#{following.name}
                   .col-sm-3(style="padding-top: 3px; padding-bottom: 3px;")
-                    form(action="/follow/" + following.name method="post")
+                    form(action="/follow/#{following.name}" method="post")
                       input(type="hidden" name="_method" value="delete")
                       button.btn.btn-default.pull-right(type="submit") Unfollow

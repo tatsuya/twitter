@@ -36,9 +36,9 @@ function checkRelationship(loginUser) {
   };
 }
 
-router.get('/:name', function(req, res, next) {
+router.get('/:name(@[a-zA-Z_0-9]+)', function(req, res, next) {
   var loginUser = req.loginUser;
-  var name = req.params.name;
+  var name = req.params.name.split('@')[1];
 
   res.locals.me = loginUser && loginUser.name === name;
 
@@ -79,7 +79,7 @@ router.get('/:name', function(req, res, next) {
         return next(err);
       }
 
-      res.render('users', {
+      res.render('profile', {
         title: util.format('%s (@%s)', user.fullname, user.name),
         user: results.user,
         stats: results.stats,
@@ -91,7 +91,7 @@ router.get('/:name', function(req, res, next) {
 
 router.get('/:name/followers', function(req, res, next) {
   var loginUser = req.loginUser;
-  var name = req.params.name;
+  var name = req.params.name.split('@')[1];
 
   res.locals.me = loginUser && loginUser.name === name;
 
@@ -132,7 +132,7 @@ router.get('/:name/followers', function(req, res, next) {
 
 router.get('/:name/followings', function(req, res, next) {
   var loginUser = req.loginUser;
-  var name = req.params.name;
+  var name = req.params.name.split('@')[1];
 
   res.locals.me = loginUser && loginUser.name === name;
 

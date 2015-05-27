@@ -5,8 +5,6 @@ var router = express.Router();
 
 var User = require('../lib/model/user');
 
-// var tweets = require('./tweets');
-
 /**
  * Fetch the user by ID. If the user exists, the user data will be passed to
  * res.send() to be serialized. If the user doesn't exist, it responds with a
@@ -23,7 +21,5 @@ router.get('/user/:id', function(req, res, next) {
     res.json(user);
   });
 });
-
-// router.use('/tweets', tweets);
 
 module.exports = router;
