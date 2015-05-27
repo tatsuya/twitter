@@ -15,22 +15,6 @@ var join = require('../lib/helper/join');
 var format = require('../lib/helper/format');
 
 /**
- * Express middleware to check if given param name is same as the user name who
- * is currently logged in. If the name is same, then set res.locals.isMe to
- * true.
- */
-function isMe() {
-  return function(req, res, next) {
-    res.locals.isMe = false;
-    var me = res.locals.loginUser;
-    if (me && me.name === req.params.name) {
-       res.locals.isMe = true;
-    }
-    next();
-  };
-}
-
-/**
  * Returns a function which checks if the given `user` is followed by the
  * `loginUser`.
  *
@@ -52,9 +36,11 @@ function checkRelationship(loginUser) {
   };
 }
 
-router.get('/:name', isMe(), function(req, res, next) {
+router.get('/:name', function(req, res, next) {
   var loginUser = req.loginUser;
   var name = req.params.name;
+
+  res.locals.me = loginUser && loginUser.name === name;
 
   User.getByName(name, function(err, user) {
     if (err) {
@@ -103,9 +89,11 @@ router.get('/:name', isMe(), function(req, res, next) {
   });
 });
 
-router.get('/:name/followers', isMe(), function(req, res, next) {
+router.get('/:name/followers', function(req, res, next) {
   var loginUser = req.loginUser;
   var name = req.params.name;
+
+  res.locals.me = loginUser && loginUser.name === name;
 
   User.getByName(name, function(err, user) {
     if (err) {
@@ -142,9 +130,11 @@ router.get('/:name/followers', isMe(), function(req, res, next) {
   });
 });
 
-router.get('/:name/followings', isMe(), function(req, res, next) {
+router.get('/:name/followings', function(req, res, next) {
   var loginUser = req.loginUser;
   var name = req.params.name;
+
+  res.locals.me = loginUser && loginUser.name === name;
 
   User.getByName(name, function(err, user) {
     if (err) {

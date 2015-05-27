@@ -12,7 +12,7 @@ block content
     .row
       .col-md-6.col-md-offset-3
         if !stats.followers
-          if isMe
+          if me
             p.lead.text-muted You don't have any followers yet.
           else
             p.lead.text-muted #{user.fullname} doen't have any followers yet.

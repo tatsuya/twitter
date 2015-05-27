@@ -24,7 +24,7 @@ nav.navbar.navbar-default.navbar-static-top(style="background-color: #fff;")
         ul.nav.navbar-nav.navbar-right
           li
             div(style="padding: 18px 10px;")
-              if isMe
+              if me
                 a.btn.btn-default(href="/settings" role="button") Edit profile
               else if user.following
                 form(action="/follow/#{user.name}" method="post")
