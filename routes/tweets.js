@@ -29,7 +29,7 @@ router.get('/', function(req, res, next) {
     tweets: function(fn) {
       Tweet.countHomeTimeline(loginUser.id, function(err, count) {
         if (err) {
-          return next(err);
+          return fn(err);
         }
 
         var page = res.locals.page = paginate(req.query.page, 50, count);
