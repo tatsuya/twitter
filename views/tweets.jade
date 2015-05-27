@@ -43,7 +43,17 @@ block content
               li.list-group-item
                 include components/tweet
 
-          include components/pager
+          //- include components/pager
+
+          if page.count
+            nav
+              ul.pager
+                if page.number
+                  li.previous
+                    a(href="/tweets?page=#{page.number}") Previous
+                if page.number < page.count - 1
+                  li.next
+                    a(href="/tweets?page=#{page.number + 2}") Next
 
       .col-md-3
         if suggestions.length

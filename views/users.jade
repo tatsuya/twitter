@@ -57,3 +57,13 @@ block content
                                   button.btn.btn-default(type="button", data-dismiss="modal") Close
                                   input(type="hidden" name="_method" value="delete")
                                   input.btn.btn-primary(type="submit" value="Delete" style="margin-left: 5px;")
+
+          if page.count
+            nav
+              ul.pager
+                if page.number
+                  li.previous
+                    a(href="/users/#{user.name}?page=#{page.number}") Previous
+                if page.number < page.count - 1
+                  li.next
+                    a(href="/users/#{user.name}?page=#{page.number + 2}") Next

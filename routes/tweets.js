@@ -6,18 +6,17 @@ var router = express.Router();
 var async = require('async');
 
 var validate = require('../lib/middleware/validate');
-var page = require('../lib/middleware/page');
 
 var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
 
 var stats = require('../lib/helper/stats');
+var paginate = require('../lib/helper/paginate');
 var join = require('../lib/helper/join');
 var format = require('../lib/helper/format');
 
-router.get('/', page(Tweet.countHomeTimeline, 50), function(req, res, next) {
+router.get('/', function(req, res, next) {
   var loginUser = req.loginUser;
-  var page = req.page;
 
   if (!loginUser) {
     return res.redirect('/login');
@@ -28,15 +27,23 @@ router.get('/', page(Tweet.countHomeTimeline, 50), function(req, res, next) {
       stats(loginUser.id, fn);
     },
     tweets: function(fn) {
-      Tweet.getHomeTimeline(loginUser.id, page.from, page.to, function(err, tweets) {
+      Tweet.countHomeTimeline(loginUser.id, function(err, count) {
         if (err) {
-          return fn(err);
+          return next(err);
         }
-        async.map(tweets, join, function(err, tweets) {
+
+        var page = res.locals.page = paginate(req.query.page, 50, count);
+
+        Tweet.getHomeTimeline(loginUser.id, page.from, page.to, function(err, tweets) {
           if (err) {
             return fn(err);
           }
-          return fn(null, tweets.map(format.relativeTime('created_at')));
+          async.map(tweets, join, function(err, tweets) {
+            if (err) {
+              return fn(err);
+            }
+            return fn(null, tweets.map(format.relativeTime('created_at')));
+          });
         });
       });
     },
@@ -71,13 +78,12 @@ router.post('/',
       return res.redirect('login');
     }
 
-    var data = req.body.tweet;
-
     var date = new Date();
+    var timestamp = date.getTime();
 
     var tweet = new Tweet({
-      text: data.text,
-      created_at: date.getTime(),
+      text: req.body.tweet.text,
+      created_at: timestamp,
       user_id: loginUser.id
     });
 
@@ -92,7 +98,7 @@ router.post('/',
         }
 
         async.each(followerIds, function(followerId, fn) {
-          Tweet.addToHomeTimeline(tweet.id, followerId, date.getTime(), fn);
+          Tweet.addToHomeTimeline(tweet.id, followerId, timestamp, fn);
         }, function(err) {
           if (err) {
             return next(err);
@@ -116,7 +122,6 @@ router.post('/:id', function(req, res, next) {
   }
 
   if (req.body._method !== 'delete') {
-    console.log('Unsupported HTTP method: ' + req.body._method);
     return res.redirect('/login');
   }
 

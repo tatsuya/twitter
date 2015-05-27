@@ -6,12 +6,11 @@ var router = express.Router();
 var util = require('util');
 var async = require('async');
 
-var page = require('../lib/middleware/page');
-
 var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
 
 var stats = require('../lib/helper/stats');
+var paginate = require('../lib/helper/paginate');
 var join = require('../lib/helper/join');
 var format = require('../lib/helper/format');
 
@@ -55,7 +54,6 @@ function checkRelationship(loginUser) {
 
 router.get('/:name', isMe(), function(req, res, next) {
   var loginUser = req.loginUser;
-  var page = req.page;
   var name = req.params.name;
 
   User.getByName(name, function(err, user) {
@@ -70,15 +68,23 @@ router.get('/:name', isMe(), function(req, res, next) {
         stats(user.id, fn);
       },
       tweets: function(fn) {
-        Tweet.getUserTimeline(user.id, 0, -1, function(err, tweets) {
+        Tweet.countUserTimeline(user.id, function(err, count) {
           if (err) {
-            return fn(err);
+            return next(err);
           }
-          async.map(tweets, join, function(err, tweets) {
+
+          var page = res.locals.page = paginate(req.query.page, 50, count);
+
+          Tweet.getUserTimeline(user.id, page.from, page.to, function(err, tweets) {
             if (err) {
               return fn(err);
             }
-            return fn(null, tweets.map(format.relativeTime('created_at')));
+            async.map(tweets, join, function(err, tweets) {
+              if (err) {
+                return fn(err);
+              }
+              return fn(null, tweets.map(format.relativeTime('created_at')));
+            });
           });
         });
       }
