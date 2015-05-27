@@ -15,60 +15,6 @@ var paginate = require('../lib/helper/paginate');
 var join = require('../lib/helper/join');
 var format = require('../lib/helper/format');
 
-router.get('/', function(req, res, next) {
-  var loginUser = req.loginUser;
-
-  if (!loginUser) {
-    return res.redirect('/login');
-  }
-
-  async.parallel({
-    stats: function(fn) {
-      stats(loginUser.id, fn);
-    },
-    tweets: function(fn) {
-      Tweet.countHomeTimeline(loginUser.id, function(err, count) {
-        if (err) {
-          return fn(err);
-        }
-
-        var page = res.locals.page = paginate(req.query.page, 50, count);
-
-        Tweet.getHomeTimeline(loginUser.id, page.from, page.to, function(err, tweets) {
-          if (err) {
-            return fn(err);
-          }
-          async.map(tweets, join, function(err, tweets) {
-            if (err) {
-              return fn(err);
-            }
-            return fn(null, tweets.map(format.relativeTime('created_at')));
-          });
-        });
-      });
-    },
-    suggestions: function(fn) {
-      User.getSuggestions(loginUser.id, 3, fn);
-    }
-  }, function(err, results) {
-    if (err) {
-      return next(err);
-    }
-
-    if (req.remoteUser) {
-      return res.json(results.tweets);
-    }
-
-    res.render('tweets', {
-      title: 'Twitter',
-      user: loginUser,
-      stats: results.stats,
-      tweets: results.tweets,
-      suggestions: results.suggestions
-    });
-  });
-});
-
 router.post('/',
   validate.required('tweet[text]'),
   validate.lengthLessThanOrEqualTo('tweet[text]', 140),

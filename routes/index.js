@@ -6,6 +6,7 @@ var router = express.Router();
 var async = require('async');
 
 var Tweet = require('../lib/model/tweet');
+var User = require('../lib/model/user');
 
 var stats = require('../lib/helper/stats');
 var paginate = require('../lib/helper/paginate');
@@ -13,14 +14,13 @@ var join = require('../lib/helper/join');
 var format = require('../lib/helper/format');
 
 router.get('/', function(req, res, next) {
-  if (!req.loginUser) {
+  var user = req.loginUser;
+  if (!user) {
     req.flash();
     return res.render('index', {
       title: 'Welcome to Twitter - Login or Sign up'
     });
   }
-
-  var user = req.loginUser;
 
   async.parallel({
     stats: function(fn) {
@@ -44,13 +44,19 @@ router.get('/', function(req, res, next) {
           });
         });
       });
+    },
+    suggestions: function(fn) {
+      User.getSuggestions(user.id, 3, fn);
     }
   }, function(err, results) {
     if (err) {
       return next(err);
     }
-    console.log(results);
-    res.redirect('/tweets');
+
+    results.title = 'Twitter';
+    results.user = user;
+
+    res.render('home', results);
   });
 });
 
