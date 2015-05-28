@@ -10,6 +10,8 @@ var validate = require('../lib/middleware/validate');
 var Tweet = require('../lib/model/tweet');
 var User = require('../lib/model/user');
 
+var timestamp = require('../lib/helper/timestamp');
+
 router.get('/', function(req, res) {
   if (!res.locals.loginUser) {
     return res.redirect('/login');
@@ -27,12 +29,9 @@ router.post('/',
       return res.redirect('login');
     }
 
-    var date = new Date();
-    var timestamp = date.getTime();
-
     var tweet = new Tweet({
       text: req.body.tweet.text,
-      created_at: timestamp,
+      created_at: timestamp.create(),
       user_id: loginUser.id
     });
 
@@ -47,7 +46,7 @@ router.post('/',
         }
 
         async.each(followerIds, function(followerId, fn) {
-          Tweet.addToHomeTimeline(tweet.id, followerId, timestamp, fn);
+          Tweet.addToHomeTimeline(tweet.id, followerId, tweet.created_at, fn);
         }, function(err) {
           if (err) {
             return next(err);

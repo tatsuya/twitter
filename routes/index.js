@@ -11,7 +11,7 @@ var User = require('../lib/model/user');
 var stats = require('../lib/helper/stats');
 var paginate = require('../lib/helper/paginate');
 var join = require('../lib/helper/join');
-var format = require('../lib/helper/format');
+var timestamp = require('../lib/helper/timestamp');
 
 router.get('/', function(req, res, next) {
   var user = req.loginUser;
@@ -40,7 +40,7 @@ router.get('/', function(req, res, next) {
             if (err) {
               return fn(err);
             }
-            return fn(null, tweets.map(format.relativeTime('created_at')));
+            return fn(null, tweets.map(timestamp.toRelativeTime('created_at')));
           });
         });
       });
