@@ -89,7 +89,7 @@ router.get('/:name(@[a-zA-Z_0-9]+)', function(req, res, next) {
   });
 });
 
-router.get('/:name/followers', function(req, res, next) {
+router.get('/:name(@[a-zA-Z_0-9]+)/followers', function(req, res, next) {
   var loginUser = req.loginUser;
   var name = req.params.name.split('@')[1];
 
@@ -130,7 +130,7 @@ router.get('/:name/followers', function(req, res, next) {
   });
 });
 
-router.get('/:name/followings', function(req, res, next) {
+router.get('/:name(@[a-zA-Z_0-9]+)/followings', function(req, res, next) {
   var loginUser = req.loginUser;
   var name = req.params.name.split('@')[1];
 
