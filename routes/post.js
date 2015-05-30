@@ -13,7 +13,7 @@ var User = require('../lib/model/user');
 var timestamp = require('../lib/helper/timestamp');
 
 router.get('/', function(req, res) {
-  if (!res.locals.loginUser) {
+  if (!req.loginUser) {
     return res.redirect('/login');
   }
   req.flash();
@@ -24,7 +24,7 @@ router.post('/',
   validate.required('tweet[text]'),
   validate.lengthLessThanOrEqualTo('tweet[text]', 140),
   function(req, res, next) {
-    var loginUser = res.locals.loginUser;
+    var loginUser = req.loginUser;
     if (!loginUser) {
       return res.redirect('login');
     }
@@ -64,7 +64,7 @@ router.post('/',
 );
 
 router.post('/:id', function(req, res, next) {
-  var loginUser = res.locals.loginUser;
+  var loginUser = req.loginUser;
   if (!loginUser) {
     return res.redirect('/login');
   }
@@ -75,44 +75,34 @@ router.post('/:id', function(req, res, next) {
 
   var tweetId = req.params.id;
 
-  Tweet.removeFromGlobalTimeline(tweetId, function(err) {
+  async.parallel([
+    function(fn) {
+      Tweet.removeFromGlobalTimeline(tweetId, fn);
+    },
+    function(fn) {
+      Tweet.removeFromUserTimeline(tweetId, loginUser.id, fn);
+    },
+    function(fn) {
+      Tweet.removeFromHomeTimeline(tweetId, loginUser.id, fn);
+    },
+    function(fn) {
+      User.listFollowerIds(loginUser.id, function(err, followerIds) {
+        if (err) {
+          return fn(err);
+        }
+        async.each(followerIds, function(followerId, fn2) {
+          Tweet.removeFromHomeTimeline(tweetId, followerId, fn2);
+        }, fn);
+      });
+    },
+    function(fn) {
+      Tweet.delete(tweetId, fn);
+    }
+  ], function(err) {
     if (err) {
       return next(err);
     }
-
-    Tweet.removeFromUserTimeline(tweetId, loginUser.id, function(err) {
-      if (err) {
-        return next(err);
-      }
-
-      Tweet.removeFromHomeTimeline(tweetId, loginUser.id, function(err) {
-        if (err) {
-          return next(err);
-        }
-
-        User.listFollowerIds(loginUser.id, function(err, followerIds) {
-          if (err) {
-            return next(err);
-          }
-
-          async.each(followerIds, function(followerId, fn) {
-            Tweet.removeFromHomeTimeline(tweetId, followerId, fn);
-          }, function(err) {
-            if (err) {
-              return next(err);
-            }
-
-            Tweet.delete(tweetId, function(err) {
-              if (err) {
-                return next(err);
-              }
-
-              res.redirect('/');
-            });
-          });
-        });
-      });
-    });
+    res.redirect('/');
   });
 });
 
