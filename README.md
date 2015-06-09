@@ -36,7 +36,7 @@ When we create a new user we do something like this, assuming the user is called
 
 ```
 INCR user:ids => 123
-HMSET user:123 name "bob" password "asdfjkl;" fullname "Bob Marley"
+HMSET user:123 name "bob" pass "asdfjkl;" fullname "Bob Marley"
 ```
 
 ### Followers and followings
@@ -82,7 +82,7 @@ user:123:home_timeline => Sorted Set of tweet IDs posted by the user and the use
 For example, retrieving latest 5 tweet IDs from the user timeline is something like the following:
 
 ```
-ZREVRANGE user:123:hoeme_timeline 0 4
+ZREVRANGE user:123:home_timeline 0 4
 ```
 
 ## Development
