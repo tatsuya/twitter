@@ -1,5 +1,7 @@
 # twitter
 
+[![Build Status](https://travis-ci.org/tatsuyaoiw/twitter.svg?branch=master)](https://travis-ci.org/tatsuyaoiw/twitter)
+
 A minimal Twitter clone, built with [Node][node] and [Redis][redis].
 
 ## Live demo
