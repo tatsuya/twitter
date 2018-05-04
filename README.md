@@ -91,33 +91,33 @@ ZREVRANGE user:123:home_timeline 0 4
 
 ### Download project
 
-First, clone this repository. When download finished, move into the project directy then run:
+Clone this repository and `cd` to the project's home directory, run:
 
 ```
 $ npm install
 ```
 
-This will install all required dependent modules.
+This will install all required dependencies.
 
 ### Install Redis
 
-Since this application requires Redis installed on your machine, you'll need to install it. For Mac OSX, the most easiest way would be using [Homebrew][homebrew].
+For Mac OSX, the easiest way would be to use [Homebrew][homebrew].
 
 ```
 $ brew install redis
 ```
 
-Otherwise, please check [Redis's official documentaiton][redis] out.
+Otherwise, please look for other options in [Redis's official documentaiton][redis].
 
 ### Start application
 
-This application is based on [Express][express] framework. To start the application, run:
+This application is based on the web application framework called [Express][express]. To start the application, run the following command:
 
 ```
 $ npm start
 ```
 
-It will serve application at `http://localhost:3000/`.
+It will serve the application at `http://localhost:3000/`.
 
 ## Deployment
 
