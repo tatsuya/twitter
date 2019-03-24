@@ -6,7 +6,7 @@ A minimal Twitter clone, built with [Node][node] and [Redis][redis].
 
 ## Live demo
 
-https://twitterlikeapp.herokuapp.com/
+https://twitttter.herokuapp.com/
 
 ## Features
 
