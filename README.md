@@ -1,6 +1,6 @@
 # twitter
 
-[![Build Status](https://travis-ci.org/tatsuyaoiw/twitter.svg?branch=master)](https://travis-ci.org/tatsuyaoiw/twitter)
+![Node.js CI](https://github.com/tatsuya/twitter/workflows/Node.js%20CI/badge.svg)
 
 A minimal Twitter clone, built with [Node][node] and [Redis][redis].
 
