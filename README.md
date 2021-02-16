@@ -99,13 +99,13 @@ This will install all required dependencies.
 
 ### Install Redis
 
-For Mac OSX, the easiest way would be to use [Homebrew][homebrew].
+You can download the Redis either via [Homebrew][homebrew] or [Docker][docker].
+
+The following command will use the [Docker's official Redis image](https://hub.docker.com/_/redis/) to run a new container that contains a Redis instance with the container name `my-redis`.
 
 ```
-$ brew install redis
+docker run --name my-redis -d redis
 ```
-
-Otherwise, please look for other options in [Redis's official documentaiton][redis].
 
 ### Start application
 
@@ -153,6 +153,7 @@ MIT © Tatsuya Oiwa
 [node]: https://nodejs.org/
 [redis]: http://redis.io/
 [homebrew]: http://brew.sh/
+[docker]: https://www.docker.com/
 [express]: http://expressjs.com/
 [heroku-getting-started-with-node]: https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction
 [retwis]: https://github.com/antirez/retwis
