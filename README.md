@@ -101,7 +101,7 @@ This will install all required dependencies.
 
 This project uses [Express][express] as a web application framework. The Express app is containerized with [Docker][docker] enabling you to run the Node.js application and Redis in containers.
 
-To build and run the Node.js application, you can use [Docker Compose][docker-compose] commands. Docker Compose is a tool for defining and running multi-container Docker applications.
+To build and run the Node.js application, you can use [Docker Compose][docker-compose] commands. Compose is a tool for defining and running multi-container Docker applications. With Compose, you can create and start the application and dependent middleware with a single command.
 
 From the project directory, start up the application by running:
 
