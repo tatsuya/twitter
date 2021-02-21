@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "49160:3000"
+    volumes:
+      # Mounts the project directory on the host to `/usr/src/app` inside the container,
+      # allowing you to modify the code on the fly, without having to rebuild the image.
+      - .:/usr/src/app
+      # The `bcrypt` library compiled on the host (e.g. macOS) may not work on the Linux container.
+      # As a workaround, mount the bcrypt module directory as a volume.
+      - /usr/src/app/node_modules/bcrypt
+  redis:
+    image: "redis:alpine"

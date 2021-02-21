@@ -89,7 +89,7 @@ ZREVRANGE user:123:home_timeline 0 4
 
 ### Download project
 
-Clone this repository and `cd` to the project's home directory, run:
+Clone this repository and `cd` to the project directory, run:
 
 ```
 $ npm install
@@ -97,25 +97,21 @@ $ npm install
 
 This will install all required dependencies.
 
-### Install Redis
+### Install Docker
 
-You can download the Redis either via [Homebrew][homebrew] or [Docker][docker].
+This project uses [Express][express] as a web application framework. The Express app is containerized with [Docker][docker] enabling you to run the Node.js application and Redis in containers.
 
-The following command will use the [Docker's official Redis image](https://hub.docker.com/_/redis/) to run a new container that contains a Redis instance with the container name `my-redis`.
+To build and run the Node.js application, you can use [Docker Compose][docker-compose] commands. Docker Compose is a tool for defining and running multi-container Docker applications.
 
-```
-docker run --name my-redis -d redis
-```
-
-### Start application
-
-This application is based on the web application framework called [Express][express]. To start the application, run the following command:
+From the project directory, start up the application by running:
 
 ```
-$ npm start
+docker-compose up
 ```
 
-It will serve the application at `http://localhost:3000/`.
+Docker Compose pulls a [Redis image](https://hub.docker.com/_/redis/), builds an image for the application code, and starts the services defined in `docker-compose.yml` file.
+
+Enter `http://localhost:49160/` in a browser to see the application running.
 
 ## Deployment
 
@@ -152,8 +148,8 @@ MIT © Tatsuya Oiwa
 
 [node]: https://nodejs.org/
 [redis]: http://redis.io/
-[homebrew]: http://brew.sh/
 [docker]: https://www.docker.com/
+[docker-compose]: https://docs.docker.com/compose/
 [express]: http://expressjs.com/
 [heroku-getting-started-with-node]: https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction
 [retwis]: https://github.com/antirez/retwis
