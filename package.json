@@ -22,7 +22,7 @@
     "jade": "~1.9.0",
     "moment": "^2.10.2",
     "morgan": "^1.5.3",
-    "redis": "^3.0.2",
+    "redis": "^3.1.1",
     "serve-favicon": "~2.2.0",
     "underscore": "^1.8.3"
   },
