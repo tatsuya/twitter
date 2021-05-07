@@ -24,7 +24,7 @@
     "morgan": "^1.5.3",
     "redis": "^3.0.2",
     "serve-favicon": "~2.2.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "jshint": "~2.6.3",
