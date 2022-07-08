@@ -20,7 +20,7 @@
     "express-params": "0.0.3",
     "express-session": "^1.11.1",
     "jade": "~1.9.0",
-    "moment": "^2.10.2",
+    "moment": "^2.29.4",
     "morgan": "^1.5.3",
     "redis": "^3.0.2",
     "serve-favicon": "~2.2.0",
